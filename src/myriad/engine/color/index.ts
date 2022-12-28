@@ -1,5 +1,5 @@
 //Configs and Utilities
-import { defaultScheme, Myriad, MyriadOutput } from './config'
+import { defaultScheme, Myriad } from './config'
 import { distributeScheme } from './primitives/distribution'
 
 //Main functions

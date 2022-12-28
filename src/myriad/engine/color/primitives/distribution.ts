@@ -1,6 +1,6 @@
 import { createScheme } from '..'
 import { getReadable, makeReadable } from './color'
-import { Myriad, MyriadOutput, GenColor } from '../config'
+import { MyriadOutput, GenColor } from '../config'
 //import  { adjustColors, accent } from "../adjust"
 //import { generateColor } from "../generator"
 
@@ -14,14 +14,14 @@ export const distributeScheme = (
     background, 
     foreground, 
     accents, 
-    //settings 
+    //settings
   } = scheme
   if(!background) return
   if(!foreground) return
   if(!accents) return
   setBackground(background, element)
   setForeground(foreground, element)
-  setAccents(accents, element)
+  setAccents({accents, element})
   
   //setSettings(settings, element)
   setOthers(scheme, element)
@@ -44,7 +44,7 @@ const setOthers = (scheme: MyriadOutput, element: HTMLElement) => {
   const imgColorContrast = getReadable(foreground.color, 'white', 19)
   setProperty('--imgColor', imgColor, element)
   setProperty('--imgColor-contrast', imgColorContrast, element)
-  setProperty('--link', makeReadable("#6b6bff", foreground.color, background.color, 7), element)
+  setProperty('--link', makeReadable("#6b6bff", foreground.color, background?.color, 7), element) // TODO: make this prettier
   setProperty('color', 'var(--foreground)', element) // this line makes sure that subschemes change their color if needed
 
   /*TODO: make color system extendible with the ability to add custom color logic
@@ -102,7 +102,7 @@ const setOthers = (scheme: MyriadOutput, element: HTMLElement) => {
 
 }
 
-const setBackground = (background?: GenColor, element: HTMLElement) => {
+const setBackground = (background: GenColor, element: HTMLElement) => {
   if(!background) return
   setProperty('--background', background.color, element)
   setProperty('--shade', background.shade, element)
@@ -116,7 +116,13 @@ const setForeground = (foreground: GenColor, element: HTMLElement) => {
   setProperty('--foreground-shade-faint', foreground.shade2, element)
 }
 
-const setAccents = (accents: GenColor[], element: HTMLElement) => {
+interface AccentsInterface {
+  accents?: GenColor[]
+  element: HTMLElement
+}
+
+const setAccents = (props: AccentsInterface) => {
+  const { accents, element } = props
   if(!accents) return
   accents.forEach((fl: GenColor, index: number) => {
     setAccent(index, fl, element)

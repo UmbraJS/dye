@@ -1,6 +1,7 @@
 import { AdjustedScheme } from '../config'
 import tinycolor from "tinycolor2"
 export type Color = tinycolor.Instance
+export type Colour = string | Color
 
 export const getHSLA = (col: string, a = 0.6) => {
   const color = tinycolor(col);
@@ -11,7 +12,7 @@ export const getHSLA = (col: string, a = 0.6) => {
 }
 
 
-const checkReadability = (col: Color, bg: Color, mult = 1) => {
+const checkReadability = (col: Colour, bg: Colour, mult = 1) => {
   return tinycolor.readability(col, bg) * mult
 }
 
@@ -20,7 +21,8 @@ export const isDark = (col: Color) => {
 }
 
 
-export const makeReadable = (color: string, foreground: Color, background: Color, readability = 1) => {
+export const makeReadable = (color: string, foreground: Colour, background?: Colour, readability = 1) => {
+  if(!background) background = tinycolor('white')
   return contrastToMix(color, foreground, background, readability)
 }
 
@@ -40,7 +42,7 @@ export const pickContrast = (c: Color, scheme: AdjustedScheme) => {
   return mostReadable
 }
 
-const contrastToMix = (col: string, fg: Color, bg: Color, readability = 0.01) => {
+const contrastToMix = (col: string, fg: Colour, bg: Colour, readability = 0.01) => {
   let newColor = tinycolor(col)
 
   //mix in some bg until it contrasts fg enough for readability threshold
@@ -73,7 +75,7 @@ export const mixToShade = (color: Color, mixer: Color, readability = 1.5) => {
 }
 
 
-export const getReadable = (color: Color, background: Color, readability = 5) => {
+export const getReadable = (color: Colour, background: Colour, readability = 5) => {
   let newColor = tinycolor(color)
 
   //Change lightness value until color contrasts bg

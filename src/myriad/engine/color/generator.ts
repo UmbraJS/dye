@@ -14,7 +14,7 @@ export const ColorObj = (colors: ColorRange, scheme: AdjustedScheme): GenColor =
   const { color, antithesis } = colors
 
   return {
-    color,
+    color: color.toHexString(),
     shade: mixToShade(color, antithesis, 12.0),
     shade2: mixToShade(color, antithesis, faintness),
     contrast: pickContrast(color, scheme).toString()
@@ -22,15 +22,15 @@ export const ColorObj = (colors: ColorRange, scheme: AdjustedScheme): GenColor =
 }
 
 //generate colors
-export function generateColor(colors: ColorRange, scheme: AdjustedScheme) {
-  if(!colors.color) return
-  return ColorObj(colors, scheme)
-}
+//export function generateColor(colors: ColorRange, scheme: AdjustedScheme) {
+//  if(!colors.color) return
+//  return ColorObj(colors, scheme)
+//}
 
 function background(scheme: AdjustedScheme) {
   if(!scheme.background) return
   const { background, foreground } = scheme
-  return generateColor({
+  return ColorObj({
     color: background, 
     antithesis: foreground || background
   }, scheme)
@@ -39,18 +39,19 @@ function background(scheme: AdjustedScheme) {
 function foreground(scheme: AdjustedScheme) {
   if(!scheme.foreground) return
   const { background, foreground } = scheme
-  return generateColor({
+  return ColorObj({
     color: foreground, 
     antithesis: background || foreground
   }, scheme)
 }
 
-function accents(scheme: AdjustedScheme) {
-  if(!scheme.accents) return []
-  return scheme.accents?.map((fl) => generateColor({
-    color: fl, 
-    antithesis: scheme.background || fl
-  }, scheme))
+function accents(scheme: AdjustedScheme): GenColor[] | undefined {
+  return scheme.accents?.map((fl) => {
+    return ColorObj({
+      color: fl, 
+      antithesis: scheme.background || fl
+    }, scheme)
+  }) 
 }
 
 export const generate = (scheme = adjust()): MyriadOutput => {
@@ -59,6 +60,6 @@ export const generate = (scheme = adjust()): MyriadOutput => {
   return {
     background: background(scheme),
     foreground: foreground(scheme),
-    accents: accents(scheme) || []
+    accents: accents(scheme),
   }
 }

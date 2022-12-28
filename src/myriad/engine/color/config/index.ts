@@ -1,7 +1,7 @@
 import tinycolor from "tinycolor2"
 
 export interface GenColor {
-  color: tinycolor.Instance;
+  color: string;
   shade: string;
   shade2: string;
   contrast: string;
