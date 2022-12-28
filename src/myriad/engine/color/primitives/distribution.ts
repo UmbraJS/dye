@@ -17,8 +17,7 @@ export const distributeScheme = (
     //settings
   } = scheme
   if(!background) return
-  if(!foreground) return
-  if(!accents) return
+  if(!foreground) return //TODO: clean this up, only background is needed
   setBackground(background, element)
   setForeground(foreground, element)
   setAccents({accents, element})
