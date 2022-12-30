@@ -54,6 +54,7 @@ export const adjust = (scheme = defaultScheme) => {
   obj.background = background(scheme)
   obj.foreground = foreground(scheme)
   obj.accents = scheme.accents?.map((fl) => accent(fl, scheme))
+  obj.origin = scheme
   
   return obj
 }

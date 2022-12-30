@@ -1,7 +1,8 @@
+import tinycolor from "tinycolor2"
 import { createScheme } from '..'
-import { getReadable, makeReadable } from './color'
-import { MyriadOutput, GenColor } from '../config'
-//import  { adjustColors, accent } from "../adjust"
+import { MyriadOutput, GenColor, ColorList, customColor } from '../config'
+import  { accent } from "../adjust"
+import { ColorObj } from "../generator"
 //import { generateColor } from "../generator"
 
 const htmlElement = document.documentElement
@@ -10,105 +11,81 @@ export const distributeScheme = (
   scheme = createScheme(),
   element = htmlElement,
 ) => {
-  const { 
-    background, 
-    foreground, 
-    accents, 
-    //settings
-  } = scheme
+  const { background, foreground, accents } = scheme
   if(!background) return
-  if(!foreground) return //TODO: clean this up, only background is needed
-  setBackground(background, element)
-  setForeground(foreground, element)
+  setBackground({background, element})
+  setForeground({foreground, element})
   setAccents({accents, element})
-  
-  //setSettings(settings, element)
   setOthers(scheme, element)
+  //Saftey rail
+  setProperty('color', 'var(--foreground)', element) // this line makes sure that subschemes change their color if needed
 }
 
 const setProperty = (name: string, value: string, element: HTMLElement) => {
   element.style.setProperty(name, value)
 }
 
-//const setSettings = (settings, element) => {
-//  if(!settings) return
-//  setProperty('--link', settings.link, element)
-//}
-
 const setOthers = (scheme: MyriadOutput, element: HTMLElement) => {
-  if(!scheme.foreground) return
-  const { foreground, background } = scheme
-  
-  const imgColor = getReadable(foreground.color, 'black', 19)
-  const imgColorContrast = getReadable(foreground.color, 'white', 19)
-  setProperty('--imgColor', imgColor, element)
-  setProperty('--imgColor-contrast', imgColorContrast, element)
-  setProperty('--link', makeReadable("#6b6bff", foreground.color, background?.color, 7), element) // TODO: make this prettier
-  setProperty('color', 'var(--foreground)', element) // this line makes sure that subschemes change their color if needed
+  const custom = scheme.origin.custom
+  if(!scheme.foreground || !custom) return
 
-  /*TODO: make color system extendible with the ability to add custom color logic
-  const schemex = {
-    ...scheme,
-    custom: {
-      imgColor: (s) => getReadable(s.foreground.color, 'black', 19), //this should be a generated object with a contrast property
-      success: '#00ff00',
-      error: '#ff0000',
-      link: '#0000ff',
-      test: {color: '#ff0000', shade: ['#ff0000', '#ff0000', '#ff0000']},
-    },
-  }
-
-  const makeArray = (obj) => {
+  const makeArray = (obj: ColorList): ColorList[] => {
     const objArray = Object.entries(obj)
     return objArray.map(([key, value]) => {
       return {[key]: value}
     })
   }
-  
-  const generateCustomColors = (array) => {
+
+  const generateCustomColors = (array: ColorList[]) => {
     return array.map((obj) => {
       const key = Object.keys(obj)[0]
       const value = Object.values(obj)[0]
-
-      const isObject = typeof value === 'object'
-      const isArray = Array.isArray(value)
-
-      if(!isObject && !isArray) return {[key]: getColorValue(value)}
-      if(isArray) return {[key]: value.map((v) => getColorValue(v))}
-      if(isObject) return {[key]: generateCustomColors(makeArray(value))}
+      return {[key]: getColorValue(value)}
     })
   }
 
-  /*const getColorValue = (value) => {
-    let color = value
-
+  const getColorValue = (value: customColor) => {
+    let color = value ? value : 'black'
+    const origin = scheme.origin
     typeof value === 'function'
-      ? color = value(scheme)
-      : color = accent(value, scheme).toHexString()
+      ? color = value(origin)
+      : color = accent(value, origin).toHexString()
+    return color
+  }
 
-    return {color}
-  }*/
-
-  //console.log("rex: red", generateCustomColors(makeArray(schemex.custom)))
-
-  //set colors
-  /*const setColors = (obj, element) => {
-    const key = Object.keys(obj)[0]
-    const value = Object.values(obj)[0]
-    const isArray = Array.isArray(value)
-    if(!isArray) setProperty('--' + key, value.color, element)
-  }*/
+  const customColors = generateCustomColors(makeArray(custom))
+  customColors.forEach((c, index: number) => {
+    console.log(scheme)
+    const key = Object.keys(c)[0]
+    const value = Object.values(c)[0]
+    let newColor = tinycolor(value)
+    const gen = ColorObj({
+      color: newColor,
+      antithesis: newColor
+    }, scheme)
+    //setAccent(index, c, element)
+  })
 
 }
 
-const setBackground = (background: GenColor, element: HTMLElement) => {
+// function isArray(obj: any) {
+//   return Array.isArray(obj)
+// }
+
+// function isObject(obj: any) {
+//   return typeof obj === 'object'
+// }
+
+const setBackground = (props: {background: GenColor, element: HTMLElement}) => {
+  const { background, element } = props
   if(!background) return
   setProperty('--background', background.color, element)
   setProperty('--shade', background.shade, element)
   setProperty('--shade-faint', background.shade2, element)
 }
 
-const setForeground = (foreground: GenColor, element: HTMLElement) => {
+const setForeground = (props: {foreground?: GenColor, element: HTMLElement}) => {
+  const { foreground, element } = props
   if(!foreground) return
   setProperty('--foreground', foreground.color, element)
   setProperty('--foreground-shade', foreground.shade, element)
@@ -128,13 +105,13 @@ const setAccents = (props: AccentsInterface) => {
   })
 }
 
-const setAccent = (index: number, fl: GenColor, element: HTMLElement) => {
-  let name = '--accent'
+const setAccent = (index = 0, fl: GenColor, element: HTMLElement, name = "accent") => {
+  let vName = '--' + name
   let id = index > 0 ? index : ''
-  setProperty(name + id, fl.color, element)
-  setProperty(name + id + '-shade', fl.shade, element)
-  setProperty(name + id + '-shade-faint', fl.shade2, element)
-  setProperty(name + id + '-contrast', fl.contrast, element)
+  setProperty(vName + id, fl.color, element)
+  setProperty(vName + id + '-shade', fl.shade, element)
+  setProperty(vName + id + '-shade-faint', fl.shade2, element)
+  setProperty(vName + id + '-contrast', fl.contrast, element)
 }
 
 export default distributeScheme

@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { colorBus } from "../myriad";
 
-colorBus({
-  foreground: "red",
-  background: "blue",
-})
+colorBus()
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 //Configs and Utilities
-import { defaultScheme, Myriad } from './config'
+import { defaultScheme, Myriad, MyriadOutput  } from './config'
 import { distributeScheme } from './primitives/distribution'
 
 //Main functions
@@ -7,12 +7,12 @@ import { adjust } from "./adjust"
 import { generate } from "./generator"
 
 //Composition Functions
-export const createScheme = (scheme?: Myriad) => {
+export const createScheme = (scheme?: Myriad): MyriadOutput => {
   return generate(adjust(scheme))
 }
 
 const htmlElement = document.documentElement
-export const colorBus = (scheme: Myriad, element = htmlElement) => {
+export const colorBus = (scheme?: Myriad, element = htmlElement) => {
   const generated = createScheme(scheme)
   distributeScheme(generated, element)
   return generated
