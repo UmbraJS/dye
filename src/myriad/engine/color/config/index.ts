@@ -1,5 +1,4 @@
 import tinycolor from "tinycolor2"
-import { getReadable, makeReadable } from '../primitives/color'
 
 export interface GenColor {
   color: string;
@@ -15,15 +14,17 @@ export interface MyriadOutput {
   origin: Myriad,
 }
 
+type subSchemes = {
+  [key: string]: Myriad
+}
+
 export interface Myriad {
   background?: string,
   foreground?: string,
   accents?: string[],
   generated?: MyriadOutput | null,
   readability?: number,
-  subSchemes?: {
-    [key: string]: Myriad
-  },
+  subSchemes?: subSchemes,
   custom?: ColorList
 }
 
@@ -57,18 +58,6 @@ export const defaultScheme: Myriad = {
 
   subSchemes: {},
   custom: {
-    link: (s: Myriad) => {
-      if(!s.foreground) return "black"
-      const fcolor = s.foreground
-      const bcolor = s.background
-      const blue = '#6b6bff'
-      const linkColor = makeReadable(blue, fcolor, bcolor, 7)
-      return linkColor
-    },
-    imgColor: (s: Myriad) => {
-      if(!s.foreground) return "black"
-      return getReadable(s.foreground, 'black', 19)
-    },
     success: '#00ff00',
     error: '#ff0000',
   }

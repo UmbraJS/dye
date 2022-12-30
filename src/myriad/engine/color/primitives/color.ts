@@ -1,4 +1,4 @@
-import { AdjustedScheme } from '../config'
+import { AdjustedScheme, Myriad } from '../config'
 import tinycolor from "tinycolor2"
 export type Color = tinycolor.Instance
 export type Colour = string | Color
@@ -21,9 +21,14 @@ export const isDark = (col: Color) => {
 }
 
 
-export const makeReadable = (color: string, foreground: Colour, background?: Colour, readability = 1) => {
-  if(!background) background = tinycolor('white')
-  return contrastToMix(color, foreground, background, readability)
+export const makeReadable = (color: string, Myriad: Myriad, readability = 1) => {
+  let { background, foreground } = Myriad
+  if(!background) background = tinycolor('white').toHexString()
+  return contrastToMix({
+    col: color,
+    antithesis: foreground || background,
+    catalyst: background
+  }, readability)
 }
 
 
@@ -42,19 +47,24 @@ export const pickContrast = (c: Color, scheme: AdjustedScheme) => {
   return mostReadable
 }
 
-const contrastToMix = (col: string, fg: Colour, bg: Colour, readability = 0.01) => {
-  let newColor = tinycolor(col)
+type ColorRange = {
+  col: string, 
+  antithesis: Colour, 
+  catalyst: Colour
+}
 
-  //mix in some bg until it contrasts fg enough for readability threshold
+const contrastToMix = (props: ColorRange, readability = 0.01) => {
+  const { col, antithesis, catalyst } = props
+  let newColor = tinycolor(col)
+  //mix in some catalyst until it contrasts antithesis enough for readability threshold
 
   let iterations = 0
-  while (checkReadability(newColor, fg, 5) < readability && iterations < 50) {
-    newColor = tinycolor.mix(newColor, bg, iterations)
-    //console.log("rex: ", col, newColor.toHexString())
+  while (checkReadability(newColor, antithesis, 5) < readability && iterations < 50) {
+    newColor = tinycolor.mix(newColor, catalyst, iterations)
     iterations++
   }
 
-  return getReadable(newColor, bg, 5)
+  return getReadable(newColor, catalyst, 5)
 }
 
 

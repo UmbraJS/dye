@@ -54,7 +54,6 @@ const setOthers = (scheme: MyriadOutput, element: HTMLElement) => {
 
   const customColors = generateCustomColors(makeArray(custom))
   customColors.forEach((c, index: number) => {
-    console.log(scheme)
     const key = Object.keys(c)[0]
     const value = Object.values(c)[0]
     let newColor = tinycolor(value)

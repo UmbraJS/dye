@@ -36,9 +36,14 @@ export const accent = (fl: string, scheme: Myriad, fallback = tinycolor.random()
     ? background(scheme)
     : background(defaultScheme)
 
+  const context = {
+    foreground: fg,
+    background: bg,
+  }
+
   return fl
-    ? tinycolor(makeReadable(fl, fg, bg))
-    : tinycolor(makeReadable(fallback, fg, bg))
+    ? tinycolor(makeReadable(fl, context))
+    : tinycolor(makeReadable(fallback, context))
 }
 
 //export const adjustColors = (scheme = defaultScheme) => {
