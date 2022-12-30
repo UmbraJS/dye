@@ -54,13 +54,17 @@ function accents(scheme: AdjustedScheme): GenColor[] | undefined {
   }) 
 }
 
+export let generated: MyriadOutput | null = null
 export const generate = (scheme = adjust()): MyriadOutput => {
   //Gets the adjusted colors from the wrapper and generates more colors
   //assosiated with the root colors. Like, shadeded variations and accent contrast colors.
-  return {
+  const obj = {
     background: background(scheme),
     foreground: foreground(scheme),
     accents: accents(scheme),
     origin: scheme.origin,
   }
+
+  generated = obj
+  return obj
 }

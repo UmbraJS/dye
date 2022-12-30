@@ -46,6 +46,7 @@ export const accent = (fl: string, scheme: Myriad, fallback = tinycolor.random()
 //  return scheme.settings?.map((s) => accent(s, scheme))
 //}
 
+export let adjusted: AdjustedScheme | null = null
 export const adjust = (scheme = defaultScheme) => {
   //Gets the config and adjusts the colors according to
   //their relationship to each other so theres enough color contrasts
@@ -56,5 +57,6 @@ export const adjust = (scheme = defaultScheme) => {
   obj.accents = scheme.accents?.map((fl) => accent(fl, scheme))
   obj.origin = scheme
   
+  adjusted = obj
   return obj
 }

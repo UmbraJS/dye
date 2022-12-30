@@ -47,8 +47,6 @@ const contrastToMix = (col: string, fg: Colour, bg: Colour, readability = 0.01) 
 
   //mix in some bg until it contrasts fg enough for readability threshold
 
-  //console.log("rex: ", checkReadability(newColor, fg, 5), " < ", readability, checkReadability(newColor, fg, 5) < readability)
-
   let iterations = 0
   while (checkReadability(newColor, fg, 5) < readability && iterations < 50) {
     newColor = tinycolor.mix(newColor, bg, iterations)

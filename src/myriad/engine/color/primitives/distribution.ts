@@ -1,9 +1,8 @@
 import tinycolor from "tinycolor2"
 import { createScheme } from '..'
 import { MyriadOutput, GenColor, ColorList, customColor } from '../config'
-import  { accent } from "../adjust"
+import  { accent, adjusted } from "../adjust"
 import { ColorObj } from "../generator"
-//import { generateColor } from "../generator"
 
 const htmlElement = document.documentElement
 
@@ -17,8 +16,8 @@ export const distributeScheme = (
   setForeground({foreground, element})
   setAccents({accents, element})
   setOthers(scheme, element)
-  //Saftey rail
-  setProperty('color', 'var(--foreground)', element) // this line makes sure that subschemes change their color if needed
+  //This line makes sure that subschemes change their color if needed
+  setProperty('color', 'var(--foreground)', element)
 }
 
 const setProperty = (name: string, value: string, element: HTMLElement) => {
@@ -59,11 +58,12 @@ const setOthers = (scheme: MyriadOutput, element: HTMLElement) => {
     const key = Object.keys(c)[0]
     const value = Object.values(c)[0]
     let newColor = tinycolor(value)
+    if(!adjusted) return
     const gen = ColorObj({
       color: newColor,
       antithesis: newColor
-    }, scheme)
-    //setAccent(index, c, element)
+    }, adjusted)
+    setAccent(0, gen, element, key)
   })
 
 }
