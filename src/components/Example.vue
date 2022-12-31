@@ -1,36 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-
-import { colorBus } from "../myriad";
-import { getReadable, makeReadable } from '../myriad/engine/color/primitives/color'
-import { Myriad } from '../myriad/engine/color/config'
-
 import { useColorName } from "../composables/useColorName"
-import { eyeDropper } from "../composables/eyedropper"
-
-function linkColor(m: Myriad) {
-  if(!m.foreground) return "black"
-  const blue = '#6b6bff'
-  const linkColor = makeReadable(blue, m, 7)
-  return linkColor
-}
-
-function imgColor(m: Myriad) {
-  if(!m.foreground) return "black"
-  return getReadable(m.foreground, 'black', 19)
-}
-
-colorBus({
-  background: '#090233',
-  foreground: '#ff5555',
-  accents: ['#5200ff'],
-  custom: {
-    link: linkColor,
-    imgColor: imgColor,
-    success: '#00ff00',
-    error: '#ff0000',
-  }
-})
+//import { eyeDropper } from "../composables/eyedropper"
 
 const colorCanvas = ref<HTMLCanvasElement>()
 const hueCanvas = ref<HTMLCanvasElement>()
@@ -116,7 +87,8 @@ type colorWheelType = {
   frame?: {top: number, bottom: number}
 }
 
-function colorWheel(canvas: HTMLCanvasElement, props?: colorWheelType) {
+function colorWheel(canvas?: HTMLCanvasElement, props?: colorWheelType) {
+  if(!canvas) return
   const {hue = 'red', frame = {top: 0, bottom: 0}} = props || {}
 
   const ctx = canvas.getContext('2d')
@@ -128,7 +100,8 @@ function colorWheel(canvas: HTMLCanvasElement, props?: colorWheelType) {
   addValueGradient(ctx, sizes)
 }
 
-function hueSlider(canvas: HTMLCanvasElement) {
+function hueSlider(canvas?: HTMLCanvasElement) {
+  if(!canvas) return
   const ctx = canvas.getContext('2d')
   if(ctx === null) return
 
@@ -149,12 +122,8 @@ function assignColor(hex: string) {
 }
 
 onMounted(() => {
-  if(!colorCanvas.value) return
   colorWheel(colorCanvas.value, {hue: 'blue'})
-
-  if(!hueCanvas.value) return
   hueSlider(hueCanvas.value)
-
   assignColor('#f1c1d1')
 })
 
@@ -170,8 +139,7 @@ onMounted(() => {
     ref="colorCanvas"
     width="300" 
     height="300"
-    @click="() => eyeDropper((hex) => assignColor(hex))"
-    >
+  >
   </canvas>
   <canvas
     ref="hueCanvas"
