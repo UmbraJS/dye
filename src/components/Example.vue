@@ -6,6 +6,7 @@ import { getReadable, makeReadable } from '../myriad/engine/color/primitives/col
 import { Myriad } from '../myriad/engine/color/config'
 
 import { useColorName } from "../composables/useColorName"
+import { eyeDropper } from "../composables/eyedropper"
 
 function linkColor(m: Myriad) {
   if(!m.foreground) return "black"
@@ -54,7 +55,7 @@ function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: string, size
   const gradient2 = props.ctx.createLinearGradient(0, 0, width, 0)
   gradient2.addColorStop(0, 'transparent')
   gradient2.addColorStop(1, props.hue)
-
+  
   props.ctx.fillStyle = gradient2
   fillRect(props.ctx, dimentions)
 }
@@ -140,6 +141,13 @@ const color = reactive({
   value: '#ff0000',
 })
 
+function assignColor(hex: string) {
+  const get = useColorName(hex)
+  const { name, value } = get()
+  color.name = name
+  color.value = value
+}
+
 onMounted(() => {
   if(!colorCanvas.value) return
   colorWheel(colorCanvas.value, {hue: 'blue'})
@@ -147,12 +155,9 @@ onMounted(() => {
   if(!hueCanvas.value) return
   hueSlider(hueCanvas.value)
 
-  const get = useColorName('#f1c1d1')
-  const { name, value } = get()
-  color.name = name
-  color.value = value
-  
+  assignColor('#f1c1d1')
 })
+
 </script>
 
 <template>
@@ -164,7 +169,9 @@ onMounted(() => {
   <canvas 
     ref="colorCanvas"
     width="300" 
-    height="300">
+    height="300"
+    @click="() => eyeDropper((hex) => assignColor(hex))"
+    >
   </canvas>
   <canvas
     ref="hueCanvas"
