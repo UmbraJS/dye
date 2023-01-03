@@ -36,9 +36,9 @@ export const accent = (fl: string, scheme: Myriad, fallback = tinycolor.random()
     ? background(scheme)
     : background(defaultScheme)
 
-  const context = {
-    foreground: fg,
-    background: bg,
+  const context: Myriad = {
+    foreground: fg.toHexString(),
+    background: bg.toHexString(),
   }
 
   return fl
