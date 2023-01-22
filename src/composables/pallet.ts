@@ -9,6 +9,10 @@ export const color = reactive({
   hex: '#ff0000',
 })
 
+export function palletElement(el: any) {
+  pallet.value = el
+}
+
 export function assignColor(hex: string) {
   const get = useColorName(hex)
   const { name, value } = get()
