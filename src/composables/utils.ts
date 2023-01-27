@@ -29,15 +29,19 @@ export function getPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement, p?: {
   return {color: rgbToHex(rgba), pixel: {x, y}}
 }
 
-export function canvasCheck(e: MouseEvent, click: boolean) {
+export function offCanvas(e: MouseEvent, click: boolean) {
   const returnCondition = !mousedown.value && !click
   if(!mousedown.value) activeCanvas.value = e.target
   if(activeCanvas.value === null) activeCanvas.value = e.target
   return returnCondition
 }
 
+export function isActiveCanvas(target?: EventTarget | HTMLCanvasElement | null) {
+  return activeCanvas.value !== target
+}
+
 export let mousedown = ref(false)
-export let activeCanvas = ref<EventTarget | null>(null)
+let activeCanvas = ref<EventTarget | null>(null)
 
 const { pressed } = useMousePressed()
 watch(pressed, (value: boolean) => {
@@ -45,3 +49,7 @@ watch(pressed, (value: boolean) => {
   activeCanvas.value = null
   mousedown.value = value
 })
+
+export function clamp(num: number, min: number, max: number) {
+  return num <= min ? min : num >= max ? max : num;
+}
