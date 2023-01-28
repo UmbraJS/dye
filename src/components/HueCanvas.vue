@@ -2,7 +2,12 @@
 import { ref, onMounted } from 'vue'
 import { useDimentions } from "../composables/useDimentions"
 import { assignColor } from '../composables/pallet'
-import { offCanvas, pixelColor, canvasPixelColor, isActiveCanvas } from '../composables/utils'
+import { 
+  offCanvas, 
+  pixelColor, 
+  canvasPixelColor, 
+  isActiveCanvas 
+} from '../composables/utils'
 import { colorWheel, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
 
@@ -25,6 +30,12 @@ const position = ref({x: 30, y: 30})
 function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {height, width} = sizes
   const gradient = ctx.createLinearGradient(0, 0, 0, height)
+  hueSpectrum(gradient)
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, width, height)
+}
+
+function hueSpectrum(gradient: CanvasGradient) {
   gradient.addColorStop(0, 'red')
   gradient.addColorStop(0.17, 'orange')
   gradient.addColorStop(0.34, 'yellow')
@@ -32,16 +43,12 @@ function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   gradient.addColorStop(0.68, 'blue')
   gradient.addColorStop(0.85, 'indigo')
   gradient.addColorStop(1, 'violet')
-
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, width, height)
 }
 
 function hueSlider(canvas?: HTMLCanvasElement) {
   if(!canvas) return
   const ctx = canvas.getContext('2d')
   if(ctx === null) return
-
   const sizes = useDimentions(canvas)
   addHueSpectrum(ctx, sizes)
 }
@@ -49,6 +56,11 @@ function hueSlider(canvas?: HTMLCanvasElement) {
 function hueChange(e: MouseEvent, click = false) {
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
+  updateColorCanvas(e)
+  updatePallet()
+}
+
+function updateColorCanvas(e: MouseEvent) {
   const hex = canvasPixelColor(e, hueCanvas.value)
   if(!hex) return
   colorWheel({hue: hex.color})
@@ -56,23 +68,22 @@ function hueChange(e: MouseEvent, click = false) {
     x: position.value.x, 
     y: hex.pixel.y
   }
-  updateFromHue()
 }
 
-function updateFromHue() {
-  const hex2 = pixelColor(pos.value, colorCanvas.value)
-  if(!hex2) return
-  assignColor(hex2.color)
+function updatePallet() {
+  const hex = pixelColor(pos.value, colorCanvas.value)
+  if(!hex) return
+  assignColor(hex.color)
 }
 
 onMounted(() => {
+  hueSlider(hueCanvas.value)
   const canvasWidth = hueCanvas.value?.width
   const canvasCenter = canvasWidth ? canvasWidth / 2 : 0
   position.value = {
     x:  canvasCenter,
     y: 0
   }
-  hueSlider(hueCanvas.value)
 })
 </script>
 
