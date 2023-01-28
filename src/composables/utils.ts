@@ -18,15 +18,20 @@ function rgbToHex(orig: any) {
   return "#" + hex;
 }
 
-export function getPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement, p?: {x: number, y: number}) {
+export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement) {
+  if(!canvas) return
+  return pixelColor(getMousePos(canvas, evt), canvas)
+}
+
+
+export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement) {
   if(!canvas) return
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if(ctx === null) return
-  const {x, y} = p ? p : getMousePos(canvas, evt)
-  const pixel = ctx.getImageData(x, y, 1, 1)
+  const pixel = ctx.getImageData(pos.x, pos.y, 1, 1)
   const data = pixel.data
   const rgba = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})`
-  return {color: rgbToHex(rgba), pixel: {x, y}}
+  return {color: rgbToHex(rgba), pixel: pos}
 }
 
 export function offCanvas(e: MouseEvent, click: boolean) {

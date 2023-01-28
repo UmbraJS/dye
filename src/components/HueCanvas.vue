@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useDimentions } from "../composables/useDimentions"
 import { assignColor } from '../composables/pallet'
-import { offCanvas, getPixelColor, isActiveCanvas } from '../composables/utils'
+import { offCanvas, pixelColor, canvasPixelColor, isActiveCanvas } from '../composables/utils'
 import { colorWheel, colorCanvas, pos } from '../composables/color'
 
 type dimentionsType = {
@@ -48,14 +48,14 @@ function hueSlider(canvas?: HTMLCanvasElement) {
 function hueChange(e: MouseEvent, click = false) {
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
-  const hex = getPixelColor(e, hueCanvas.value)
+  const hex = canvasPixelColor(e, hueCanvas.value)
   if(!hex) return
   colorWheel({hue: hex.color})
-  updateFromHue(e)
+  updateFromHue()
 }
 
-function updateFromHue(e: MouseEvent) {
-  const hex2 = getPixelColor(e, colorCanvas.value, pos.value)
+function updateFromHue() {
+  const hex2 = pixelColor(pos.value, colorCanvas.value)
   if(!hex2) return
   assignColor(hex2.color)
 }

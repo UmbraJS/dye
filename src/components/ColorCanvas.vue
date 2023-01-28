@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useMouse } from '@vueuse/core'
 import { onMounted, computed, watch, ref } from 'vue'
-import { assignColor, color } from '../composables/pallet'
+import { assignColor } from '../composables/pallet'
 import { 
   offCanvas, 
-  getPixelColor, 
+  canvasPixelColor, 
   isActiveCanvas, 
   mousedown,
   clamp 
@@ -14,34 +14,37 @@ import Handle from "./Handle.vue"
 
 const mouseOn = ref(false)
 
+//when clicked on canvas and dragging inside canvas
 function spectrumChange(e: MouseEvent, click = false) {
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
-  const hex = getPixelColor(e, colorCanvas.value)
+  const hex = canvasPixelColor(e, colorCanvas.value)
   if(!hex) return
   assignColor(hex.color)
   pos.value = hex.pixel
   mouseOn.value = true
 }
 
+//when clicked on canvas but dragging outside canvas
 const { x, y } = useMouse()
 const posPixel = computed(() => ({x: x.value, y: y.value}))
 watch(posPixel, (val) => {
-  const activeOutside = !mouseOn.value 
+  const activeOutside = 
+    !mouseOn.value 
     && mousedown.value 
     && !isActiveCanvas(colorCanvas.value)
-
   if(!activeOutside && colorCanvas.value) return
-  console.log("rex1")
-  //pos.value = val
+  clampPos(val)
+})
 
+function clampPos(val: {x: number, y: number}) {
   const box = colorCanvas.value?.getBoundingClientRect()
   if(!box) return
   pos.value = {
     x: clamp(val.x - box?.left, 0, box?.width),
     y: clamp(val.y - box?.top, 0, box?.height)
   }
-})
+}
 
 onMounted(() => colorWheel({hue: 'blue'}))
 </script>
