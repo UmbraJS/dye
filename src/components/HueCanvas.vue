@@ -4,6 +4,7 @@ import { useDimentions } from "../composables/useDimentions"
 import { assignColor } from '../composables/pallet'
 import { offCanvas, pixelColor, canvasPixelColor, isActiveCanvas } from '../composables/utils'
 import { colorWheel, colorCanvas, pos } from '../composables/color'
+import Handle from "./Handle.vue"
 
 type dimentionsType = {
   left: number, 
@@ -19,7 +20,7 @@ type sizesType = {
 }
 
 const hueCanvas = ref<HTMLCanvasElement>()
-//let pos = ref({x: 30, y: 30})
+const position = ref({x: 30, y: 30})
 
 function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {height, width} = sizes
@@ -51,6 +52,10 @@ function hueChange(e: MouseEvent, click = false) {
   const hex = canvasPixelColor(e, hueCanvas.value)
   if(!hex) return
   colorWheel({hue: hex.color})
+  position.value = {
+    x: position.value.x, 
+    y: hex.pixel.y
+  }
   updateFromHue()
 }
 
@@ -61,12 +66,22 @@ function updateFromHue() {
 }
 
 onMounted(() => {
+  const canvasWidth = hueCanvas.value?.width
+  const canvasCenter = canvasWidth ? canvasWidth / 2 : 0
+  position.value = {
+    x:  canvasCenter,
+    y: 0
+  }
   hueSlider(hueCanvas.value)
 })
 </script>
 
 <template>
   <div class="canvas">
+    <Handle
+      :canvas="hueCanvas" 
+      :position="position"
+    />
     <canvas
       ref="hueCanvas"
       width="50" 
