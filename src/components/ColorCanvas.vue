@@ -3,8 +3,10 @@ import { useMouse } from '@vueuse/core'
 import { onMounted, computed, watch, ref } from 'vue'
 import { assignColor } from '../composables/pallet'
 import { 
+  hexType,
   offCanvas, 
-  canvasPixelColor, 
+  pixelColor,
+  canvasPixelColor,
   isActiveCanvas, 
   mousedown,
   clamp 
@@ -14,36 +16,41 @@ import Handle from "./Handle.vue"
 
 const mouseOn = ref(false)
 
+function assignHex(hex: hexType) {
+  if(!hex) return
+  assignColor(hex.color)
+  pos.value = hex.pixel
+}
+
 //when clicked on canvas and dragging inside canvas
 function spectrumChange(e: MouseEvent, click = false) {
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
   const hex = canvasPixelColor(e, colorCanvas.value)
-  if(!hex) return
-  assignColor(hex.color)
-  pos.value = hex.pixel
+  assignHex(hex)
   mouseOn.value = true
 }
 
 //when clicked on canvas but dragging outside canvas
 const { x, y } = useMouse()
 const posPixel = computed(() => ({x: x.value, y: y.value}))
-watch(posPixel, (val) => {
+watch(posPixel, (pos) => {
   const activeOutside = 
     !mouseOn.value 
     && mousedown.value 
     && !isActiveCanvas(colorCanvas.value)
   if(!activeOutside && colorCanvas.value) return
-  clampPos(val)
+  clampPos(pos)
 })
 
-function clampPos(val: {x: number, y: number}) {
+function clampPos(pos: {x: number, y: number}) {
   const box = colorCanvas.value?.getBoundingClientRect()
   if(!box) return
-  pos.value = {
-    x: clamp(val.x - box?.left, 0, box?.width),
-    y: clamp(val.y - box?.top, 0, box?.height)
-  }
+  const hex = pixelColor({
+    x: clamp(pos.x - box.left, 0, box.width - 1),
+    y: clamp(pos.y - box.top, 0, box.height - 1)
+  }, colorCanvas.value)
+  assignHex(hex)
 }
 
 onMounted(() => colorWheel({hue: 'blue'}))

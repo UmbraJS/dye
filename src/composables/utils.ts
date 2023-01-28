@@ -18,13 +18,17 @@ function rgbToHex(orig: any) {
   return "#" + hex;
 }
 
+export type hexType = {
+  color: string,
+  pixel: {x: number, y: number}
+} | undefined
+
 export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement) {
   if(!canvas) return
   return pixelColor(getMousePos(canvas, evt), canvas)
 }
 
-
-export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement) {
+export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement): hexType {
   if(!canvas) return
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if(ctx === null) return
