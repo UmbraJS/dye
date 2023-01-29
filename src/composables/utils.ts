@@ -1,5 +1,5 @@
-import { ref, watch } from 'vue'
-import { useMousePressed } from '@vueuse/core'
+import { useMousePressed, useMouse } from '@vueuse/core'
+import { computed, watch, ref, Ref, onMounted } from 'vue'
 
 function getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
   const rect = canvas.getBoundingClientRect()
@@ -62,3 +62,63 @@ watch(pressed, (value: boolean) => {
 export function clamp(num: number, min: number, max: number) {
   return num <= min ? min : num >= max ? max : num;
 }
+
+type RefCanvas = Ref<HTMLCanvasElement | undefined>
+type posFunc = (pos: hexType) => void
+
+export function useCanvasClamp(props: {canvas: RefCanvas, updateCanvas: posFunc}) {
+  const { canvas, updateCanvas } = props
+  const mouseOn = ref(false)
+
+  //Update color while dragging outside canvas
+  const { x, y } = useMouse()
+  const posPixel = computed(() => ({x: x.value, y: y.value}))
+  watch(posPixel, (pos) => {
+    const activeOutside = 
+      !mouseOn.value 
+      && mousedown.value 
+      && !isActiveCanvas(canvas.value)
+    if(!activeOutside && canvas.value) return
+    updateCanvas(clampedPos(pos))
+  })
+
+  //confines handle pos to inside the canvas element
+  function clampedPos(pos: {x: number, y: number}) {
+    const box = canvas.value?.getBoundingClientRect()
+    if(!box) return
+    return pixelColor({
+      x: clamp(pos.x - box.left, 0, box.width - 2),
+      y: clamp(pos.y - box.top, 0, box.height - 2)
+    }, canvas.value)
+  }
+
+  return { mouseOn, clampedPos }
+}
+
+
+export function useResponsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void}) {
+  const { canvas, updateCanvas } = props
+  const size = 100
+  const width = ref(size)
+  const height = ref(size)
+
+  const observer = new ResizeObserver(() => setCanvas())
+
+  function setCanvas() {
+    const box = canvas.value?.getBoundingClientRect()
+    width.value = box?.width || size
+    height.value = box?.height || size
+    setTimeout(() => {
+      updateCanvas()
+    }, 1000)
+  }
+
+  onMounted(() => {
+    if(!canvas.value) return
+    observer.observe(canvas.value)
+    setCanvas()
+  })
+
+  return { width, height }
+}
+

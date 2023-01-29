@@ -61,7 +61,7 @@ export function fillRect(ctx: CanvasRenderingContext2D, dimentions: dimentionsTy
 }
 
 //composition
-export function colorWheel(props?: colorWheelType) {
+export function fillCanvas(props?: colorWheelType) {
   if(!colorCanvas.value) return
   const {hue = 'red', frame = {top: 0, bottom: 0}} = props || {}
 

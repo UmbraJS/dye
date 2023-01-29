@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { useMouse } from '@vueuse/core'
-import { onMounted, computed, watch, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import { assignColor } from '../composables/pallet'
 import { 
   hexType,
   offCanvas, 
-  pixelColor,
   canvasPixelColor,
   isActiveCanvas, 
   mousedown,
-  clamp 
+  useCanvasClamp,
+  useResponsiveCanvas
 } from '../composables/utils'
-import { colorWheel, colorCanvas, pos } from '../composables/color'
+import { fillCanvas, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
 
-const mouseOn = ref(false)
-
-function updateColorCanvas(hex: hexType) {
+function updateCanvas(hex: hexType) {
   if(!hex) return
   assignColor(hex.color)
   pos.value = hex.pixel
@@ -28,55 +25,19 @@ function colorChange(e: MouseEvent, click = false) {
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
   const hex = canvasPixelColor(e, colorCanvas.value)
-  updateColorCanvas(hex)
+  updateCanvas(hex)
   mouseOn.value = true
 }
 
-//Update color while dragging outside canvas
-const { x, y } = useMouse()
-const posPixel = computed(() => ({x: x.value, y: y.value}))
-watch(posPixel, (pos) => {
-  const activeOutside = 
-    !mouseOn.value 
-    && mousedown.value 
-    && !isActiveCanvas(colorCanvas.value)
-  if(!activeOutside && colorCanvas.value) return
-  clampedColorUpdate(pos)
+const { mouseOn } = useCanvasClamp({ 
+  canvas: colorCanvas, 
+  updateCanvas
 })
 
-//confines handle pos to inside the canvas element
-function clampedColorUpdate(pos: {x: number, y: number}) {
-  const box = colorCanvas.value?.getBoundingClientRect()
-  if(!box) return
-  const hex = pixelColor({
-    x: clamp(pos.x - box.left, 0, box.width - 2),
-    y: clamp(pos.y - box.top, 0, box.height - 2)
-  }, colorCanvas.value)
-  updateColorCanvas(hex)
-}
-
-const t = 100
-const width = ref(t)
-const height = ref(t)
 const defaultHue = 'blue'
-
-const observer = new ResizeObserver(() => {
-  setCanvas()
-})
-
-function setCanvas() {
-  const box = colorCanvas.value?.getBoundingClientRect()
-  width.value = box?.width || t
-  height.value = box?.height || t
-  setTimeout(() => {
-    colorWheel({hue: defaultHue})
-  }, 1000)
-}
-
-onMounted(() => {
-  if(!colorCanvas.value) return
-  observer.observe(colorCanvas.value)
-  setCanvas()
+const { width, height } = useResponsiveCanvas({
+  canvas: colorCanvas,
+  updateCanvas: () => fillCanvas({hue: defaultHue})
 })
 </script>
 

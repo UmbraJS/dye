@@ -8,8 +8,11 @@ import {
   canvasPixelColor, 
   isActiveCanvas,
   mousedown,
+  useCanvasClamp,
+  hexType,
+  useResponsiveCanvas
 } from '../composables/utils'
-import { colorWheel, colorCanvas, pos } from '../composables/color'
+import { fillCanvas, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
 
 type dimentionsType = {
@@ -27,6 +30,11 @@ type sizesType = {
 
 const hueCanvas = ref<HTMLCanvasElement>()
 const position = ref({x: 30, y: 30})
+
+const { mouseOn } = useCanvasClamp({ 
+  canvas: hueCanvas, 
+  updateCanvas
+})
 
 function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {height, width} = sizes
@@ -58,14 +66,15 @@ function hueChange(e: MouseEvent, click = false) {
   if(click) mousedown.value = true
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
-  updateColorCanvas(e)
+  const hex = canvasPixelColor(e, hueCanvas.value)
+  updateCanvas(hex)
   updatePallet()
+  mouseOn.value = true
 }
 
-function updateColorCanvas(e: MouseEvent) {
-  const hex = canvasPixelColor(e, hueCanvas.value)
+function updateCanvas(hex: hexType) {
   if(!hex) return
-  colorWheel({hue: hex.color})
+  fillCanvas({hue: hex.color})
   position.value = {
     x: position.value.x, 
     y: hex.pixel.y
@@ -77,6 +86,11 @@ function updatePallet() {
   if(!hex) return
   assignColor(hex.color)
 }
+
+const { width, height } = useResponsiveCanvas({
+  canvas: hueCanvas,
+  updateCanvas: () => hueSlider(hueCanvas.value)
+})
 
 onMounted(() => {
   hueSlider(hueCanvas.value)
@@ -90,24 +104,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="canvas">
+  <div class="wrapper">
     <Handle
       :canvas="hueCanvas" 
       :position="position"
     />
     <canvas
       ref="hueCanvas"
-      width="50" 
-      height="300"
+      :width="width"
+      :height="height"
       @mousedown="(e) => hueChange(e, true)"
       @mousemove="(e) => hueChange(e)"
+      @mouseleave="() => mouseOn = false"
     >
     </canvas>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.canvas {
+.wrapper {
   position: relative;
+}
+
+canvas {
+  border: 1px solid purple;
+  aspect-ratio: 1/1;
+  width: 40vw;
 }
 </style>
