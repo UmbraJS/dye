@@ -6,7 +6,8 @@ import {
   offCanvas, 
   pixelColor, 
   canvasPixelColor, 
-  isActiveCanvas 
+  isActiveCanvas,
+  mousedown,
 } from '../composables/utils'
 import { colorWheel, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
@@ -54,6 +55,7 @@ function hueSlider(canvas?: HTMLCanvasElement) {
 }
 
 function hueChange(e: MouseEvent, click = false) {
+  if(click) mousedown.value = true
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
   updateColorCanvas(e)

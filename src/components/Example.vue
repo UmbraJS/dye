@@ -4,26 +4,16 @@ import Pallet from "./Pallet.vue";
 import ColorCanvas from "./ColorCanvas.vue";
 import HueCanvas from "./HueCanvas.vue";
 import { assignColor, color, } from '../composables/pallet'
-import { mousedown } from '../composables/utils'
 
-function onMouseDown() {
-  mousedown.value = true
-}
-
-onMounted(() => {
-  assignColor('#f1c1d1')
-})
+onMounted(() => assignColor('#f1c1d1'))
 </script>
 
 <template>
-<Pallet/>
-<div 
-  class="wrapper" 
-  @mousedown="onMouseDown"
->
-  <ColorCanvas />
-  <HueCanvas />
-</div>
+  <div class="wrsapper">
+    <Pallet/>
+    <ColorCanvas />
+    <HueCanvas />
+  </div>
 </template>
 
 <style lang="scss" scoped>
