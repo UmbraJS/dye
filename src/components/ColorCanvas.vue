@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import { assignColor } from '../composables/pallet'
 import { 
   hexType,
@@ -7,8 +6,8 @@ import {
   canvasPixelColor,
   isActiveCanvas, 
   mousedown,
-  useCanvasClamp,
-  useResponsiveCanvas
+  outsideCanvas,
+  responsiveCanvas
 } from '../composables/utils'
 import { fillCanvas, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
@@ -29,13 +28,14 @@ function colorChange(e: MouseEvent, click = false) {
   mouseOn.value = true
 }
 
-const { mouseOn } = useCanvasClamp({ 
+//when outside canvas
+const { mouseOn } = outsideCanvas({ 
   canvas: colorCanvas, 
   updateCanvas
 })
 
 const defaultHue = 'blue'
-const { width, height } = useResponsiveCanvas({
+const { width, height } = responsiveCanvas({
   canvas: colorCanvas,
   updateCanvas: () => fillCanvas({hue: defaultHue})
 })
@@ -67,6 +67,6 @@ const { width, height } = useResponsiveCanvas({
 canvas {
   border: 1px solid purple;
   aspect-ratio: 1/1;
-  width: 40vw;
+  width: 300px;
 }
 </style>

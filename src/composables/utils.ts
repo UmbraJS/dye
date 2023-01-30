@@ -66,19 +66,22 @@ export function clamp(num: number, min: number, max: number) {
 type RefCanvas = Ref<HTMLCanvasElement | undefined>
 type posFunc = (pos: hexType) => void
 
-export function useCanvasClamp(props: {canvas: RefCanvas, updateCanvas: posFunc}) {
+export function outsideCanvas(props: {canvas: RefCanvas, updateCanvas: posFunc}) {
   const { canvas, updateCanvas } = props
   const mouseOn = ref(false)
+
+  function condition() {
+    //activeOutside
+    return !mouseOn.value 
+    && mousedown.value 
+    && !isActiveCanvas(canvas.value)
+  }
 
   //Update color while dragging outside canvas
   const { x, y } = useMouse()
   const posPixel = computed(() => ({x: x.value, y: y.value}))
   watch(posPixel, (pos) => {
-    const activeOutside = 
-      !mouseOn.value 
-      && mousedown.value 
-      && !isActiveCanvas(canvas.value)
-    if(!activeOutside && canvas.value) return
+    if(!condition() && canvas.value) return
     updateCanvas(clampedPos(pos))
   })
 
@@ -87,8 +90,8 @@ export function useCanvasClamp(props: {canvas: RefCanvas, updateCanvas: posFunc}
     const box = canvas.value?.getBoundingClientRect()
     if(!box) return
     return pixelColor({
-      x: clamp(pos.x - box.left, 0, box.width - 2),
-      y: clamp(pos.y - box.top, 0, box.height - 2)
+      x: clamp(pos.x - (box.left + window.scrollX), 0, box.width - 2),
+      y: clamp(pos.y - (box.top + window.scrollY), 0, box.height - 2)
     }, canvas.value)
   }
 
@@ -96,7 +99,7 @@ export function useCanvasClamp(props: {canvas: RefCanvas, updateCanvas: posFunc}
 }
 
 
-export function useResponsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void}) {
+export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void}) {
   const { canvas, updateCanvas } = props
   const size = 100
   const width = ref(size)

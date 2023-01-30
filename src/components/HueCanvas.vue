@@ -8,9 +8,9 @@ import {
   canvasPixelColor, 
   isActiveCanvas,
   mousedown,
-  useCanvasClamp,
+  outsideCanvas,
   hexType,
-  useResponsiveCanvas
+  responsiveCanvas
 } from '../composables/utils'
 import { fillCanvas, colorCanvas, pos } from '../composables/color'
 import Handle from "./Handle.vue"
@@ -31,7 +31,7 @@ type sizesType = {
 const hueCanvas = ref<HTMLCanvasElement>()
 const position = ref({x: 30, y: 30})
 
-const { mouseOn } = useCanvasClamp({ 
+const { mouseOn } = outsideCanvas({ 
   canvas: hueCanvas, 
   updateCanvas
 })
@@ -87,7 +87,7 @@ function updatePallet() {
   assignColor(hex.color)
 }
 
-const { width, height } = useResponsiveCanvas({
+const { width, height } = responsiveCanvas({
   canvas: hueCanvas,
   updateCanvas: () => hueSlider(hueCanvas.value)
 })
@@ -128,7 +128,7 @@ onMounted(() => {
 
 canvas {
   border: 1px solid purple;
-  aspect-ratio: 1/1;
-  width: 40vw;
+  width: 50px;
+  height: 100%;
 }
 </style>
