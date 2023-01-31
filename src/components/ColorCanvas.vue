@@ -37,7 +37,11 @@ const { mouseOn } = outsideCanvas({
 const defaultHue = 'blue'
 const { width, height } = responsiveCanvas({
   canvas: colorCanvas,
-  updateCanvas: () => fillCanvas({hue: defaultHue})
+  updateCanvas: () => fillCanvas({
+    hue: defaultHue,
+    saturation: 100,
+    lightness: 100
+  })
 })
 </script>
 

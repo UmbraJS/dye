@@ -16,7 +16,8 @@ type sizesType = {
 
 type colorWheelType = { 
   hue?: string, 
-  frame?: {top: number, bottom: number}
+  saturation? : number,
+  lightness?: number
 }
 
 //globals
@@ -63,12 +64,16 @@ export function fillRect(ctx: CanvasRenderingContext2D, dimentions: dimentionsTy
 //composition
 export function fillCanvas(props?: colorWheelType) {
   if(!colorCanvas.value) return
-  const {hue = 'red', frame = {top: 0, bottom: 0}} = props || {}
+  const {hue = 'red', saturation = 100, lightness = 100} = props || {}
 
   const ctx = colorCanvas.value.getContext('2d')
   if(ctx === null) return
   
-  const sizes = useDimentions(colorCanvas.value, frame)
+  const sizes = useDimentions(colorCanvas.value, {
+    height: lightness,
+    width: saturation
+  })
+
   addLightValue(ctx, sizes)
   addHueGradient({ctx, hue, sizes})
   addValueGradient(ctx, sizes)
