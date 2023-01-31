@@ -20,9 +20,4 @@ import HueCanvas from "./HueCanvas.vue";
     grid-column: span 2;
   }
 }
-
-.canvas {
-  position: relative;
-}
-
 </style>

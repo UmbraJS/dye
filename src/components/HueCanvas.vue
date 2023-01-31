@@ -89,17 +89,24 @@ function updatePallet() {
 
 const { width, height } = responsiveCanvas({
   canvas: hueCanvas,
-  updateCanvas: () => hueSlider(hueCanvas.value)
+  updateCanvas: () => {
+    hueSlider(hueCanvas.value)
+    setCenterHandle(position.value.y)
+  }
 })
 
-onMounted(() => {
-  hueSlider(hueCanvas.value)
+function setCenterHandle(y = 0) {
   const canvasWidth = hueCanvas.value?.width
   const canvasCenter = canvasWidth ? canvasWidth / 2 : 0
   position.value = {
     x:  canvasCenter,
-    y: 0
+    y
   }
+}
+
+onMounted(() => {
+  hueSlider(hueCanvas.value)
+  setCenterHandle()
 })
 </script>
 
@@ -124,10 +131,13 @@ onMounted(() => {
 <style lang="scss" scoped>
 .wrapper {
   position: relative;
+  user-select: none;
+  overflow: hidden;
 }
 
 canvas {
-  border: 1px solid purple;
+  border: 1px solid var(--foreground);
+  border-left: none;
   width: 50px;
   height: 100%;
 }

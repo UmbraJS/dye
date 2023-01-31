@@ -24,6 +24,5 @@ onMounted(() => assignColor('#f1c1d1'))
     line-height: 1;
   }
 }
-
 </style>
 

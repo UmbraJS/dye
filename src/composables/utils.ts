@@ -99,8 +99,8 @@ export function outsideCanvas(props: {canvas: RefCanvas, updateCanvas: posFunc})
 }
 
 
-export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void}) {
-  const { canvas, updateCanvas } = props
+export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void, updateDelay?: number}) {
+  const { canvas, updateCanvas, updateDelay } = props
   const size = 100
   const width = ref(size)
   const height = ref(size)
@@ -113,7 +113,7 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
     height.value = box?.height || size
     setTimeout(() => {
       updateCanvas()
-    }, 1000)
+    }, updateDelay)
   }
 
   onMounted(() => {

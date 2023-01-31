@@ -44,6 +44,7 @@ const { width, height } = responsiveCanvas({
 <template>
   <div class="wrapper">
     <Handle
+      v-if="true"
       :canvas="colorCanvas" 
       :position="pos"
     />
@@ -62,10 +63,13 @@ const { width, height } = responsiveCanvas({
 <style lang="scss" scoped>
 .wrapper {
   position: relative;
+  user-select: none;
+  overflow: hidden;
 }
 
 canvas {
-  border: 1px solid purple;
+  border: 1px solid var(--foreground);
+  border-right: none;
   aspect-ratio: 1/1;
   width: 300px;
 }
