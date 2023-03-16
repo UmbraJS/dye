@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Example from './components/Example.vue'
+import ColorPicker from './components/ColorPicker.vue'
 
 import { colorBus } from "./myriad";
 import { getReadable, makeReadable } from './myriad/engine/color/primitives/color'
@@ -31,6 +31,6 @@ colorBus({
 </script>
 
 <template>
-  <Example />
+  <ColorPicker />
 </template>
 
