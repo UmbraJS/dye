@@ -1,6 +1,6 @@
 import { colorBus } from "../myriad";
 import { ref, reactive } from 'vue'
-import { useColorName } from "../composables/useColorName"
+import { useColorName } from "./useColorName"
 
 //pallet store
 export const pallet = ref<HTMLCanvasElement>()

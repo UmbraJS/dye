@@ -1,6 +1,6 @@
 // @ts-ignore
 import nearestColor from 'nearest-color';
-import c from 'color-name-list';
+import {c} from './colornames'; //'color-name-list'
 
 type nearestType = (hex: string) => {
   name: string;
@@ -8,7 +8,7 @@ type nearestType = (hex: string) => {
 };
 
 // @ts-ignore
-const colors = c.colorNameList.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {});
+const colors = c.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {});
 const nearest: nearestType = nearestColor.from(colors);
 
 export function useColorName(h: string) {
