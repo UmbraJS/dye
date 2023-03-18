@@ -1,4 +1,4 @@
-import { colorBus } from "../myriad";
+import { myriad } from "@myriadjs/core"
 import { ref, reactive } from 'vue'
 import { useColorName } from "./useColorName"
 
@@ -18,7 +18,7 @@ export function assignColor(hex: string) {
   const { name, value } = get()
   color.name = name
   color.hex = value
-  colorBus({
+  myriad({
     background: color.hex,
     foreground: '#ff5555',
   }, pallet.value)

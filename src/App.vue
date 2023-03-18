@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import ColorPicker from './components/ColorPicker.vue'
 
-import { colorBus } from "./myriad";
-import { getReadable, makeReadable } from './myriad/engine/color/primitives/color'
-import { Myriad } from './myriad/engine/color/config'
+import { 
+  myriad, 
+  getReadable, 
+  makeReadable, 
+  Myriad 
+} from "@myriadjs/core";
 
 function linkColor(m: Myriad) {
   if(!m.foreground) return "black"
@@ -17,7 +20,7 @@ function imgColor(m: Myriad) {
   return getReadable(m.foreground, 'black', 19)
 }
 
-colorBus({
+myriad({
   background: '#090233',
   foreground: '#ff5555',
   accents: ['#5200ff'],
