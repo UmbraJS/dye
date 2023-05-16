@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useDimentions } from "../composables/useDimentions"
-import { assignColor } from '../composables/pallet'
+import { useDimentions } from "../../composables/useDimentions"
+import { assignColor } from '../../composables/pallet'
 import { 
   offCanvas, 
   pixelColor, 
@@ -11,9 +11,9 @@ import {
   outsideCanvas,
   hexType,
   responsiveCanvas
-} from '../composables/utils'
-import { fillCanvas, colorCanvas, pos } from '../composables/color'
-import Handle from "./Handle.vue"
+} from '../../composables/utils'
+import { fillCanvas, colorCanvas, pos } from '../../composables/color'
+import Handle from "../Handle.vue"
 
 type dimentionsType = {
   left: number, 
@@ -112,12 +112,10 @@ onMounted(() => {
 
 <template>
   <div class="wrapper">
-    <Handle
-      :canvas="hueCanvas" 
-      :position="position"
-    />
+    <slot :position="position"/>
     <canvas
       ref="hueCanvas"
+      class="hue-canvas"
       :width="width"
       :height="height"
       @mousedown="(e) => hueChange(e, true)"
@@ -135,9 +133,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-canvas {
-  border: 1px solid var(--foreground);
-  border-left: none;
+canvas.hue-canvas {
   width: 50px;
   height: 100%;
 }

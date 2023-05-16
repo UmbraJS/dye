@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { assignColor } from '../composables/pallet'
+import { assignColor } from '../../composables/pallet'
 import { 
   hexType,
   offCanvas, 
@@ -8,9 +8,9 @@ import {
   mousedown,
   outsideCanvas,
   responsiveCanvas
-} from '../composables/utils'
-import { fillCanvas, colorCanvas, pos } from '../composables/color'
-import Handle from "./Handle.vue"
+} from '../../composables/utils'
+import { fillCanvas, colorCanvas, pos } from '../../composables/color'
+import Handle from "../Handle.vue"
 
 function updateCanvas(hex: hexType) {
   if(!hex) return
@@ -47,13 +47,10 @@ const { width, height } = responsiveCanvas({
 
 <template>
   <div class="wrapper">
-    <Handle
-      v-if="true"
-      :canvas="colorCanvas" 
-      :position="pos"
-    />
+    <slot :position="pos" />
     <canvas
       ref="colorCanvas"
+      class="color-canvas"
       :width="width"
       :height="height"
       @mousedown="(e) => colorChange(e, true)"
@@ -71,9 +68,7 @@ const { width, height } = responsiveCanvas({
   overflow: hidden;
 }
 
-canvas {
-  border: 1px solid var(--foreground);
-  border-right: none;
+canvas.color-canvas {
   aspect-ratio: 1/1;
   width: 300px;
 }
