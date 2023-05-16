@@ -1,17 +1,14 @@
 <script setup lang="ts">
-interface Props {
-  canvas: HTMLCanvasElement | undefined,
+defineProps<{
   position: {
     x: number;
     y: number;
   }
-}
-
-const props = defineProps<Props>()
+}>()
 </script>
 
 <template>
-  <div class="handle"></div>
+  <div class="handle"><slot/></div>
 </template>
 
 <style lang="scss" scoped>
@@ -26,6 +23,5 @@ const props = defineProps<Props>()
   pointer-events: none;
   top: calc(v-bind("position.y") * 1px - var(--size) / 2);
   left: calc(v-bind("position.x") * 1px - var(--size) / 2);
-  //transition: .2s;
 }
 </style>

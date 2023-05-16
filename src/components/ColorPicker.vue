@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import Pallet from "./Pallet.vue";
-import ColorCanvas from "./ColorCanvas.vue";
-import HueCanvas from "./HueCanvas.vue";
+import ColorCanvas from "./Canvas/ColorCanvas.vue";
+import HueCanvas from "./Canvas/HueCanvas.vue";
 </script>
 
 <template>
   <div class="wrapper">
-    <Pallet/>
-    <ColorCanvas />
-    <HueCanvas />
+    <slot>
+      <Pallet/>
+      <ColorCanvas />
+      <HueCanvas />
+    </slot>
   </div>
 </template>
 
