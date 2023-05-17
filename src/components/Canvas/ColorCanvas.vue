@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { assignColor } from '../../composables/pallet'
 import { 
   hexType,
   offCanvas, 
@@ -12,11 +11,12 @@ import {
 import { useCanvas } from '../../composables/color'
 import { fillCanvas } from '../../composables/utils/gradient'
 
+const emit = defineEmits(['change'])
 const { colorCanvas, pos } = useCanvas()
 
 function updateCanvas(hex: hexType) {
   if(!hex) return
-  assignColor(hex.color)
+  emit('change', hex)
   pos.value = hex.pixel
 }
 

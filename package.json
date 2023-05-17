@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@myriadjs/core": "^0.0.83",
+    "@myriadjs/core": "^0.0.84",
     "@vueuse/core": "^10.1.2",
     "nearest-color": "^0.4.4",
     "vue": "^3.2.45"

@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { myriad } from "@myriadjs/core"
 import { ref, watch } from 'vue'
-import { color } from '../composables/pallet'
+import { color } from '../composables/color'
 const pallet =  ref<HTMLElement>()
 
 watch(color, (color) => {
   myriad({
     background: color.hex,
-    foreground: '#ff5555',
-  }, {
-    element: pallet.value
-  }).attach()
+  }).attach(pallet.value)
 })
 </script>
 
 <template>
-<div class="pallet" ref="pallet">
-  <p>{{ color.hex }}</p>
-  <h3>{{ color.name }}</h3>
-</div>
+  <div class="pallet" ref="pallet">
+    <p>{{ color.hex }}</p>
+    <h3>{{ color.name }}</h3>
+  </div>
 </template>
 
 <style lang="scss" scoped>

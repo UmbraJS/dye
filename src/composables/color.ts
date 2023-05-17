@@ -1,5 +1,6 @@
 import { ref, reactive } from 'vue'
 import { colorName } from "./colorName"
+import { hexType } from '../composables/utils/canvas'
 
 //globals
 export const colorCanvas = ref<HTMLCanvasElement | null>(null)
@@ -10,18 +11,14 @@ export function useCanvas() {
 }
 
 //pallet store
-export const pallet = ref<HTMLCanvasElement>()
 export const color = reactive({
   name: 'red',
   hex: '#ff0000',
 })
 
-export function palletElement(el: any) {
-  pallet.value = el
-}
-
-export function assignColor(hex: string) {
-  const get = colorName(hex)
+export function assignColor(hex?: hexType) {
+  if (!hex) return
+  const get = colorName(hex.color)
   const { name, value } = get()
   color.name = name
   color.hex = value
