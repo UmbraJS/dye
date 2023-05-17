@@ -18,8 +18,10 @@ export function assignColor(hex: string) {
   const { name, value } = get()
   color.name = name
   color.hex = value
-  myriad({
-    background: color.hex,
-    foreground: '#ff5555',
-  }, pallet.value)
+  // myriad({
+  //   background: color.hex,
+  //   foreground: '#ff5555',
+  // }, {
+  //   element: pallet.value
+  // }).attach()
 }

@@ -14,9 +14,7 @@ export function useDimentions(canvas: HTMLCanvasElement, frame = {height: 100, w
     heightLimit: frame.height, 
     widthLimit: frame.width
   })
-
-  console.log(h1)
-
+  
   const h = frame.height >= 0 ? 0 + h1 : 0 - h1
   const w = frame.width >= 0 ? 0 + w1 : 0 - w1
 

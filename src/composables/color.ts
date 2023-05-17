@@ -21,8 +21,12 @@ type colorWheelType = {
 }
 
 //globals
-export const colorCanvas = ref<HTMLCanvasElement>()
+export const colorCanvas = ref<HTMLCanvasElement | null>(null)
 export let pos = ref({x: 0, y: 0})
+
+export function useCanvas() {
+  return { colorCanvas, pos }
+}
 
 //canvas functions
 function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: string, sizes: sizesType}) {

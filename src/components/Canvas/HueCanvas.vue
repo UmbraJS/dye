@@ -13,7 +13,6 @@ import {
   responsiveCanvas
 } from '../../composables/utils'
 import { fillCanvas, colorCanvas, pos } from '../../composables/color'
-import Handle from "../Handle.vue"
 
 type dimentionsType = {
   left: number, 
@@ -28,7 +27,7 @@ type sizesType = {
   dimentions: dimentionsType,
 }
 
-const hueCanvas = ref<HTMLCanvasElement>()
+const hueCanvas = ref<HTMLCanvasElement | null>(null)
 const position = ref({x: 30, y: 30})
 
 const { mouseOn } = outsideCanvas({ 
@@ -54,7 +53,7 @@ function hueSpectrum(gradient: CanvasGradient) {
   gradient.addColorStop(1, 'violet')
 }
 
-function hueSlider(canvas?: HTMLCanvasElement) {
+function hueSlider(canvas?: HTMLCanvasElement | null) {
   if(!canvas) return
   const ctx = canvas.getContext('2d')
   if(ctx === null) return

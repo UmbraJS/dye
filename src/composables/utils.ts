@@ -23,12 +23,12 @@ export type hexType = {
   pixel: {x: number, y: number}
 } | undefined
 
-export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement) {
+export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement | null) {
   if(!canvas) return
   return pixelColor(getMousePos(canvas, evt), canvas)
 }
 
-export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement): hexType {
+export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement | null): hexType {
   if(!canvas) return
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if(ctx === null) return
@@ -63,7 +63,7 @@ export function clamp(num: number, min: number, max: number) {
   return num <= min ? min : num >= max ? max : num;
 }
 
-type RefCanvas = Ref<HTMLCanvasElement | undefined>
+type RefCanvas = Ref<HTMLCanvasElement | undefined | null>
 type posFunc = (pos: hexType) => void
 
 export function outsideCanvas(props: {canvas: RefCanvas, updateCanvas: posFunc}) {
@@ -108,6 +108,8 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
   const observer = new ResizeObserver(() => setCanvas())
 
   function setCanvas() {
+    console.log('setCanvas');
+    
     const box = canvas.value?.getBoundingClientRect()
     width.value = box?.width || size
     height.value = box?.height || size

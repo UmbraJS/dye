@@ -9,8 +9,9 @@ import {
   outsideCanvas,
   responsiveCanvas
 } from '../../composables/utils'
-import { fillCanvas, colorCanvas, pos } from '../../composables/color'
-import Handle from "../Handle.vue"
+import { fillCanvas, useCanvas } from '../../composables/color'
+
+const { colorCanvas, pos } = useCanvas()
 
 function updateCanvas(hex: hexType) {
   if(!hex) return
@@ -71,5 +72,6 @@ const { width, height } = responsiveCanvas({
 canvas.color-canvas {
   aspect-ratio: 1/1;
   width: 300px;
+  background-color: var(--background-20, rgb(64, 0, 0));
 }
 </style>
