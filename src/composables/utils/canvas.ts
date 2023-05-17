@@ -1,5 +1,14 @@
 import { useMousePressed, useMouse } from '@vueuse/core'
 import { computed, watch, ref, Ref, onMounted } from 'vue'
+import { rgbToHex, clamp } from './'
+
+export type hexType = {
+  color: string,
+  pixel: {x: number, y: number}
+} | undefined
+
+type RefCanvas = Ref<HTMLCanvasElement | undefined | null>
+type posFunc = (pos: hexType) => void
 
 function getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
   const rect = canvas.getBoundingClientRect()
@@ -8,20 +17,6 @@ function getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
     y: evt.clientY - rect.top
   }
 }
-
-function rgbToHex(orig: any) {
-  var rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
-    hex = rgb ?
-    (rgb[1] | 1 << 8).toString(16).slice(1) +
-    (rgb[2] | 1 << 8).toString(16).slice(1) +
-    (rgb[3] | 1 << 8).toString(16).slice(1) : orig;
-  return "#" + hex;
-}
-
-export type hexType = {
-  color: string,
-  pixel: {x: number, y: number}
-} | undefined
 
 export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement | null) {
   if(!canvas) return
@@ -58,13 +53,6 @@ watch(pressed, (value: boolean) => {
   activeCanvas.value = null
   mousedown.value = value
 })
-
-export function clamp(num: number, min: number, max: number) {
-  return num <= min ? min : num >= max ? max : num;
-}
-
-type RefCanvas = Ref<HTMLCanvasElement | undefined | null>
-type posFunc = (pos: hexType) => void
 
 export function outsideCanvas(props: {canvas: RefCanvas, updateCanvas: posFunc}) {
   const { canvas, updateCanvas } = props
@@ -108,8 +96,6 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
   const observer = new ResizeObserver(() => setCanvas())
 
   function setCanvas() {
-    console.log('setCanvas');
-    
     const box = canvas.value?.getBoundingClientRect()
     width.value = box?.width || size
     height.value = box?.height || size
@@ -125,5 +111,36 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
   })
 
   return { width, height }
+}
+
+//Handler for canvas dimentions
+function getPercent(props: {height: number, width: number, heightLimit: number, widthLimit: number}) {
+  const {height, width, heightLimit, widthLimit} = props
+  const height100 = height / 100
+  const h1 = (100 - Math.abs(heightLimit)) * height100
+  const width100 = width / 100
+  const w1 = (100 - Math.abs(widthLimit)) * width100
+  return {h1, w1}
+}
+
+export function getDimentions(canvas: HTMLCanvasElement, frame = {height: 100, width: 100}) {
+  const {height, width} = canvas.getBoundingClientRect()
+  const { w1, h1 } = getPercent({
+    height, width, 
+    heightLimit: frame.height, 
+    widthLimit: frame.width
+  })
+  
+  const h = frame.height >= 0 ? 0 + h1 : 0 - h1
+  const w = frame.width >= 0 ? 0 + w1 : 0 - w1
+
+  return { height, width, 
+    dimentions: {
+      left: w,
+      top: h, 
+      right: width, 
+      bottom: height 
+     }
+  }
 }
 

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@myriadjs/core": "^0.0.83",
-    "@vueuse/core": "^9.9.0",
+    "@vueuse/core": "^10.1.2",
     "nearest-color": "^0.4.4",
     "vue": "^3.2.45"
   },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useDimentions } from "../../composables/useDimentions"
+import { getDimentions } from "../../composables/utils/canvas"
 import { assignColor } from '../../composables/pallet'
 import { 
   offCanvas, 
@@ -11,8 +11,9 @@ import {
   outsideCanvas,
   hexType,
   responsiveCanvas
-} from '../../composables/utils'
-import { fillCanvas, colorCanvas, pos } from '../../composables/color'
+} from '../../composables/utils/canvas'
+import { colorCanvas, pos } from '../../composables/color'
+import { fillCanvas } from '../../composables/utils/gradient'
 
 type dimentionsType = {
   left: number, 
@@ -57,7 +58,7 @@ function hueSlider(canvas?: HTMLCanvasElement | null) {
   if(!canvas) return
   const ctx = canvas.getContext('2d')
   if(ctx === null) return
-  const sizes = useDimentions(canvas)
+  const sizes = getDimentions(canvas)
   addHueSpectrum(ctx, sizes)
 }
 
@@ -133,7 +134,7 @@ onMounted(() => {
 }
 
 canvas.hue-canvas {
-  width: 50px;
+  width: 25px;
   height: 100%;
 }
 </style>

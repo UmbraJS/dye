@@ -1,7 +1,7 @@
-import { useColorName } from "./useColorName"
+import { colorName } from "../colorName"
 
 function assignColor(hex: string) {
-  useColorName(hex)()
+  colorName(hex)()
 }
 
 function notSupported() {

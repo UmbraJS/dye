@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { assignColor, color, palletElement } from '../composables/pallet'
-onMounted(() => assignColor('#f1c1d1'))
+import { myriad } from "@myriadjs/core"
+import { ref, watch } from 'vue'
+import { color } from '../composables/pallet'
+const pallet =  ref<HTMLElement>()
+
+watch(color, (color) => {
+  myriad({
+    background: color.hex,
+    foreground: '#ff5555',
+  }, {
+    element: pallet.value
+  }).attach()
+})
 </script>
 
 <template>
-<div class="pallet" :ref="palletElement">
+<div class="pallet" ref="pallet">
   <p>{{ color.hex }}</p>
   <h3>{{ color.name }}</h3>
 </div>
@@ -15,7 +25,6 @@ onMounted(() => assignColor('#f1c1d1'))
 .pallet {
   background: v-bind("color.hex");
   color: var(--foreground);
-  width: 350px;
   height: 100px;
   padding: 15px;
   user-select: none;

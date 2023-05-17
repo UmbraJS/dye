@@ -11,7 +11,6 @@ type nearestType = (hex: string) => {
 const colors = c.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {});
 const nearest: nearestType = nearestColor.from(colors);
 
-export function useColorName(h: string) {
-  const getColorName = (hex: string = h) => nearest(hex);
-  return getColorName
+export function colorName(h: string) {
+  return (hex: string = h) => nearest(hex);
 }

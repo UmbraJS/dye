@@ -8,8 +8,9 @@ import {
   mousedown,
   outsideCanvas,
   responsiveCanvas
-} from '../../composables/utils'
-import { fillCanvas, useCanvas } from '../../composables/color'
+} from '../../composables/utils/canvas'
+import { useCanvas } from '../../composables/color'
+import { fillCanvas } from '../../composables/utils/gradient'
 
 const { colorCanvas, pos } = useCanvas()
 
