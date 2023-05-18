@@ -87,13 +87,18 @@ export function outsideCanvas(props: {canvas: RefCanvas, updateCanvas: posFunc})
 }
 
 
+function observeCanvas(el: RefCanvas, onResize: () => void) {
+  if(!el.value) return
+  if(!ResizeObserver) return
+  const observer = new ResizeObserver(() => onResize())
+  observer.observe(el.value)
+}
+
 export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => void, updateDelay?: number}) {
   const { canvas, updateCanvas, updateDelay } = props
   const size = 100
   const width = ref(size)
   const height = ref(size)
-
-  const observer = new ResizeObserver(() => setCanvas())
 
   function setCanvas() {
     console.log('setCanvas')
@@ -101,14 +106,13 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
     width.value = box?.width || size
     height.value = box?.height || size
     setTimeout(() => {
-      //TODO: Have a look at this
       updateCanvas()
     }, updateDelay)
   }
 
   onMounted(() => {
     if(!canvas.value) return
-    observer.observe(canvas.value)
+    observeCanvas(canvas, setCanvas)
     setCanvas()
   })
 
