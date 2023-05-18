@@ -78,7 +78,7 @@ function updateCanvas(hex: hexType) {
   emit('change', hex)
   fillCanvas({hue: hex.color}, props.colorCanvas().value)
   position.value = {
-    x: position.value.x, 
+    x: position.value.x,
     y: hex.position.y
   }
 }
@@ -107,8 +107,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="wrapper">
-    <slot :position="position"/>
+  <div class="hue-canvas-wrapper">
+    <slot :position="position" />
     <canvas
       ref="hueCanvas"
       class="hue-canvas"
@@ -123,14 +123,18 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.wrapper {
+.hue-canvas-wrapper {
   position: relative;
   user-select: none;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 canvas.hue-canvas {
   width: 25px;
   height: 100%;
+  overflow: hidden;
+  background-color: var(--background-20, rgb(64, 0, 0));
 }
 </style>

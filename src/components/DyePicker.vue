@@ -40,7 +40,7 @@ function handleChange(hex?: hexType) {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="dyepicker-wrapper">
     <slot :color="color" >
       <Pallet :color="color" />
     </slot>
@@ -69,9 +69,11 @@ function handleChange(hex?: hexType) {
 </template>
 
 <style lang="scss" scoped>
-.wrapper {
+.dyepicker-wrapper {
   display: grid;
   width: max-content;
+  height: 400px;
+
   .pallet {
     grid-column: span 2;
   }

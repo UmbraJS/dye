@@ -96,10 +96,12 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
   const observer = new ResizeObserver(() => setCanvas())
 
   function setCanvas() {
+    console.log('setCanvas')
     const box = canvas.value?.getBoundingClientRect()
     width.value = box?.width || size
     height.value = box?.height || size
     setTimeout(() => {
+      //TODO: Have a look at this
       updateCanvas()
     }, updateDelay)
   }

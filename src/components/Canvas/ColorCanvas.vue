@@ -53,7 +53,7 @@ const { width, height } = responsiveCanvas({
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="color-canvas-wrapper">
     <slot :position="position" />
     <canvas
       :ref="setRef"
@@ -69,15 +69,18 @@ const { width, height } = responsiveCanvas({
 </template>
 
 <style lang="scss" scoped>
-.wrapper {
+.color-canvas-wrapper {
   position: relative;
   user-select: none;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 canvas.color-canvas {
   aspect-ratio: 1/1;
-  width: 300px;
+  width: 100%;
+  height: 100%;
   background-color: var(--background-20, rgb(64, 0, 0));
 }
 </style>
