@@ -1,4 +1,4 @@
-import { colorName } from "../colorName"
+import { colorName } from "./colorName"
 
 function getColor(hex: string) {
   colorName(hex)()

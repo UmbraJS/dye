@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { colorName } from "../composables/colorName"
 import { hexType } from '../composables/canvas'
 import Pallet from "./Pallet.vue";
@@ -36,6 +36,7 @@ function handleChange(hex?: hexType) {
   }
 
   color.value = output
+  emit('change', output)
 }
 </script>
 
