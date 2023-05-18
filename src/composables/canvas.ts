@@ -1,6 +1,6 @@
 import { useMousePressed, useMouse } from '@vueuse/core'
 import { computed, watch, ref, Ref, onMounted } from 'vue'
-import { rgbToHex, clamp } from './'
+import { rgbToHex, clamp } from './utils'
 
 export type hexType = {
   color: string,

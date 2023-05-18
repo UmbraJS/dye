@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { getDimentions } from "../../composables/utils/canvas"
+import { ref, onMounted, Ref } from 'vue'
+import { getDimentions } from "../../composables/canvas"
 import { 
   offCanvas, 
   canvasPixelColor, 
@@ -9,8 +9,8 @@ import {
   outsideCanvas,
   hexType,
   responsiveCanvas
-} from '../../composables/utils/canvas'
-import { fillCanvas } from '../../composables/utils/gradient'
+} from '../../composables/canvas'
+import { fillCanvas } from '../../composables/gradient'
 
 type dimentionsType = {
   left: number, 
@@ -26,6 +26,9 @@ type sizesType = {
 }
 
 const emit = defineEmits(['change'])
+const props = defineProps<{
+  colorCanvas: () => Ref<HTMLCanvasElement | null>
+}>()
 
 const hueCanvas = ref<HTMLCanvasElement | null>(null)
 const position = ref({x: 30, y: 30})
@@ -73,7 +76,7 @@ function hueChange(e: MouseEvent, click = false) {
 function updateCanvas(hex: hexType) {
   if(!hex) return
   emit('change', hex)
-  fillCanvas({hue: hex.color})
+  fillCanvas({hue: hex.color}, props.colorCanvas().value)
   position.value = {
     x: position.value.x, 
     y: hex.pixel.y

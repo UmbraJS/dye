@@ -1,5 +1,4 @@
 import { getDimentions } from "./canvas"
-import { colorCanvas } from "../color"
 
 type dimentionsType = {
   left: number, 
@@ -21,7 +20,7 @@ type colorWheelType = {
 }
 
 //canvas functions
-function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: string, sizes: sizesType}) {
+export function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: string, sizes: sizesType}) {
   const {width, dimentions} = props.sizes
   const gradient2 = props.ctx.createLinearGradient(0, 0, width, 0)
   gradient2.addColorStop(0, 'transparent')
@@ -31,7 +30,7 @@ function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: string, size
   fillRect(props.ctx, dimentions)
 }
 
-function addValueGradient(ctx: CanvasRenderingContext2D, sizes: sizesType) {
+export function addValueGradient(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {height, dimentions} = sizes
   const gradient3 = ctx.createLinearGradient(0, 0, 0, height)
   gradient3.addColorStop(0, 'transparent')
@@ -41,7 +40,7 @@ function addValueGradient(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   fillRect(ctx, dimentions)
 }
 
-function addLightValue(ctx: CanvasRenderingContext2D, sizes: sizesType) {
+export function addLightValue(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {dimentions} = sizes
   ctx.fillStyle = "white"
   fillRect(ctx, dimentions)
@@ -58,14 +57,14 @@ export function fillRect(ctx: CanvasRenderingContext2D, dimentions: dimentionsTy
 }
 
 //composition
-export function fillCanvas(props?: colorWheelType) {
-  if(!colorCanvas.value) return
+export function fillCanvas(props?: colorWheelType, canvas?: HTMLCanvasElement | null) {
+  if(!canvas) return
   const {hue = 'red', saturation = 100, lightness = 100} = props || {}
 
-  const ctx = colorCanvas.value.getContext('2d')
+  const ctx = canvas.getContext('2d')
   if(ctx === null) return
   
-  const sizes = getDimentions(colorCanvas.value, {
+  const sizes = getDimentions(canvas, {
     height: lightness,
     width: saturation
   })

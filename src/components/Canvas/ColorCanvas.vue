@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, Ref} from 'vue'
 import { 
   hexType,
   offCanvas, 
@@ -6,18 +7,22 @@ import {
   isActiveCanvas, 
   mousedown,
   outsideCanvas,
-  responsiveCanvas
-} from '../../composables/utils/canvas'
-import { useCanvas } from '../../composables/color'
-import { fillCanvas } from '../../composables/utils/gradient'
+  responsiveCanvas,
+} from '../../composables/canvas'
+import { fillCanvas } from '../../composables/gradient'
 
 const emit = defineEmits(['change'])
-const { colorCanvas, pos } = useCanvas()
+const props = defineProps<{
+  getRef: () => Ref<HTMLCanvasElement | null>,
+  setRef: (el: any) => void
+}>()
+
+let position = ref({x: 0, y: 0})
 
 function updateCanvas(hex: hexType) {
   if(!hex) return
   emit('change', hex)
-  pos.value = hex.pixel
+  position.value = hex.pixel
 }
 
 //Update color while dragging inside canvas
@@ -25,33 +30,33 @@ function colorChange(e: MouseEvent, click = false) {
   if(click) mousedown.value = true
   if(offCanvas(e, click)) return
   if(isActiveCanvas(e.target)) return
-  const hex = canvasPixelColor(e, colorCanvas.value)
+  const hex = canvasPixelColor(e, props.getRef().value)
   updateCanvas(hex)
   mouseOn.value = true
 }
 
 //when outside canvas
 const { mouseOn } = outsideCanvas({ 
-  canvas: colorCanvas, 
+  canvas: props.getRef(), 
   updateCanvas
 })
 
 const defaultHue = 'blue'
 const { width, height } = responsiveCanvas({
-  canvas: colorCanvas,
+  canvas: props.getRef(),
   updateCanvas: () => fillCanvas({
     hue: defaultHue,
     saturation: 100,
     lightness: 100
-  })
+  }, props.getRef().value)
 })
 </script>
 
 <template>
   <div class="wrapper">
-    <slot :position="pos" />
+    <slot :position="position" />
     <canvas
-      ref="colorCanvas"
+      :ref="setRef"
       class="color-canvas"
       :width="width"
       :height="height"
