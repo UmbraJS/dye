@@ -22,7 +22,7 @@ let position = ref({x: 0, y: 0})
 function updateCanvas(hex: hexType) {
   if(!hex) return
   emit('change', hex)
-  position.value = hex.pixel
+  position.value = hex.position
 }
 
 //Update color while dragging inside canvas

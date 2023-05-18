@@ -28,11 +28,10 @@ function handleChange(hex?: hexType) {
   if (!hex) return
   const get = colorName(hex.color)
   const { name, value } = get()
-
   const output = {
     name,
     value,
-    position: hex.pixel
+    position: hex.position
   }
 
   color.value = output

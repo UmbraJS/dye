@@ -4,7 +4,7 @@ import { rgbToHex, clamp } from './utils'
 
 export type hexType = {
   color: string,
-  pixel: {x: number, y: number}
+  position: {x: number, y: number}
 } | undefined
 
 type RefCanvas = Ref<HTMLCanvasElement | undefined | null>
@@ -23,14 +23,14 @@ export function canvasPixelColor(evt: MouseEvent, canvas?: HTMLCanvasElement | n
   return pixelColor(getMousePos(canvas, evt), canvas)
 }
 
-export function pixelColor(pos: {x: number, y: number}, canvas?: HTMLCanvasElement | null): hexType {
+export function pixelColor(position: {x: number, y: number}, canvas?: HTMLCanvasElement | null): hexType {
   if(!canvas) return
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if(ctx === null) return
-  const pixel = ctx.getImageData(pos.x, pos.y, 1, 1)
+  const pixel = ctx.getImageData(position.x, position.y, 1, 1)
   const data = pixel.data
   const rgba = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})`
-  return {color: rgbToHex(rgba), pixel: pos}
+  return {color: rgbToHex(rgba), position}
 }
 
 export function offCanvas(e: MouseEvent, click: boolean) {

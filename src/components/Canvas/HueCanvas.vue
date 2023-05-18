@@ -79,7 +79,7 @@ function updateCanvas(hex: hexType) {
   fillCanvas({hue: hex.color}, props.colorCanvas().value)
   position.value = {
     x: position.value.x, 
-    y: hex.pixel.y
+    y: hex.position.y
   }
 }
 
