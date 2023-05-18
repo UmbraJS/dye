@@ -101,7 +101,6 @@ export function responsiveCanvas(props: {canvas: RefCanvas, updateCanvas: () => 
   const height = ref(size)
 
   function setCanvas() {
-    console.log('setCanvas')
     const box = canvas.value?.getBoundingClientRect()
     width.value = box?.width || size
     height.value = box?.height || size

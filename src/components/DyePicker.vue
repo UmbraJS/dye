@@ -5,7 +5,6 @@ import { hexType } from '../composables/canvas'
 import Pallet from "./Pallet.vue";
 import ColorCanvas from "./Canvas/ColorCanvas.vue";
 import HueCanvas from "./Canvas/HueCanvas.vue";
-import Handle from "./Handle.vue"
 
 const emit = defineEmits(['change'])
 
@@ -44,27 +43,17 @@ function handleChange(hex?: hexType) {
     <slot :color="color" >
       <Pallet :color="color" />
     </slot>
-    <ColorCanvas 
-      v-slot="slotProps" 
+    <ColorCanvas
       @change="handleChange"
       :getRef="getRef"
       :setRef="setRef"
-    >
-      <Handle
-        :position="slotProps.position" 
-        :color="color"
-      />
-    </ColorCanvas>
-    <HueCanvas 
-      v-slot="slotProps"
+      :color="color"
+    />
+    <HueCanvas
       @change="handleChange"
       :colorCanvas="getRef"
-    >
-      <Handle
-        :position="slotProps.position" 
-        :color="color"
-      />
-    </HueCanvas>
+      :color="color"
+    />
   </div>
 </template>
 

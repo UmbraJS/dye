@@ -10,11 +10,16 @@ import {
   responsiveCanvas,
 } from '../../composables/canvas'
 import { fillCanvas } from '../../composables/gradient'
+import Handle from '../Handle.vue'
 
 const emit = defineEmits(['change'])
 const props = defineProps<{
-  getRef: () => Ref<HTMLCanvasElement | null>,
+  getRef: () => Ref<HTMLCanvasElement | null>
   setRef: (el: any) => void
+  color: {
+    value: string;
+    name: string;
+  };
 }>()
 
 let position = ref({x: 0, y: 0})
@@ -54,7 +59,12 @@ const { width, height } = responsiveCanvas({
 
 <template>
   <div class="color-canvas-wrapper">
-    <slot :position="position" />
+    <slot :position="position">
+      <Handle 
+        :position="position" 
+        :color="color"
+      />
+    </slot>
     <canvas
       :ref="setRef"
       class="color-canvas"
