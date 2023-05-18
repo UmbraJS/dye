@@ -2,7 +2,7 @@
   "name": "@myriadjs/dye",
   "private": false,
   "version": "0.0.1",
-  "description": "Vue component for adding GLSL to images",
+  "description": "Color picker in a Vue component",
   "author": "Samuel M. Bednarz<https://github.com/CarelessCourage>",
   "license": "MIT",
   "keywords": [
@@ -12,13 +12,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/CarelessCourage/Moonbow"
+    "url": "https://github.com/MyriadJS/dye"
   },
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/moonbow.umd.cjs",
+  "main": "./dist/dye.umd.cjs",
   "types": "./dist/src/index.d.ts",
   "module": "./dist/dye.js",
   "exports": {
