@@ -33,7 +33,7 @@ defineProps<{
 .handle {
   background-color: v-bind("color.value");
   border-radius: 50%;
-  border: solid 3px var(--foreground);
+  border: solid 3px var(--foreground, #fff);
   aspect-ratio: 1/1;
 }
 </style>

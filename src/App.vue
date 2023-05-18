@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import ColorPicker from './components/ColorPicker.vue'
+import DyePicker from './components/DyePicker.vue'
 </script>
 
 <template>
   <div class="pickers">
-    <ColorPicker />
-    <ColorPicker />
-    <ColorPicker />
+    <DyePicker />
+    <DyePicker />
+    <DyePicker />
   </div>
 </template>
 
