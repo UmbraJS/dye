@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, Ref} from 'vue'
+import { ref, Ref, onMounted, watch } from 'vue'
+import tinycolor from "tinycolor2"
 import { 
   hexType,
   offCanvas, 
@@ -38,6 +39,11 @@ function colorChange(e: MouseEvent, click = false) {
   const hex = canvasPixelColor(e, props.getRef().value)
   updateCanvas(hex)
   mouseOn.value = true
+  const hsv = tinycolor(hex?.color).toHsv();
+  console.log('colorChange', {
+    x: width.value, //getPercent(hsv.s * 100, width.value),
+    y: height.value //height.value - getPercent(hsv.v * 100, height.value)
+  }.x)
 }
 
 //when outside canvas
@@ -46,14 +52,36 @@ const { mouseOn } = outsideCanvas({
   updateCanvas
 })
 
-const defaultHue = 'blue'
+function getHue(color: string = props.color.value) {
+  const hsv = tinycolor(color).toHsv();
+  return tinycolor({ h: hsv.h, s: 100, v: 100 }).toHexString();
+}
+
 const { width, height } = responsiveCanvas({
   canvas: props.getRef(),
   updateCanvas: () => fillCanvas({
-    hue: defaultHue,
+    hue: getHue(),
     saturation: 100,
     lightness: 100
   }, props.getRef().value)
+})
+
+function getPercent(percent: number, height?: number) {
+  if(!height) return 0
+  return (height / 100) * percent
+}
+
+watch(width, () => {
+  var color = tinycolor(props.color.value);
+  const hsl = color.toHsv();
+  const fromPercent = getPercent(50, width.value)
+  console.log('mounted', fromPercent, " / ", width.value, " = ", fromPercent / width.value)
+  console.log('s', hsl.s)
+
+  position.value = {
+    x: getPercent(hsl.s * 100, width.value),
+    y: height.value - getPercent(hsl.v * 100, height.value)
+  }
 })
 </script>
 

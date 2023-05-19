@@ -45,9 +45,8 @@ const { mouseOn } = outsideCanvas({
 })
 
 function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
-  const {height, width} = sizes
-  const gradient = hueSpectrum(ctx, height)
-  ctx.fillStyle = gradient
+  const { height, width } = sizes
+  ctx.fillStyle = hueSpectrum(ctx, height)
   ctx.fillRect(0, 0, width, height)
 }
 
@@ -104,8 +103,9 @@ function setCenterHandle(y = 0) {
   }
 }
 
-function percentageOfCanvas(percent: number, height?: number) {
+function huePercent(hue: number, height?: number) {
   if(!height) return 0
+  const percent = (hue / 360) * 100
   return height * (percent / 100)
 }
 
@@ -120,7 +120,7 @@ onMounted(() => {
     color: props.color.value,
     position: {
       x: 0,
-      y: percentageOfCanvas(hsl.h, height.value)
+      y: huePercent(hsl.h, height.value)
     }
   })
 })
