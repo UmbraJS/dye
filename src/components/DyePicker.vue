@@ -20,8 +20,9 @@ function setRef(el: HTMLCanvasElement) {
 
 const color = ref({
   name: 'red',
-  value: '#ff0000',
+  value: '#ff9900',
 })
+
 
 function handleChange(hex?: hexType) {
   if (!hex) return

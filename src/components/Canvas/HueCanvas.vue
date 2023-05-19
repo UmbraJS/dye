@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import tinycolor from "tinycolor2"
 import { ref, onMounted, Ref } from 'vue'
 import { getDimentions } from "../../composables/canvas"
 import { 
@@ -36,7 +37,7 @@ const props = defineProps<{
 }>()
 
 const hueCanvas = ref<HTMLCanvasElement | null>(null)
-const position = ref({x: 30, y: 30})
+const position = ref({x: 30, y: 70})
 
 const { mouseOn } = outsideCanvas({ 
   canvas: hueCanvas, 
@@ -45,20 +46,18 @@ const { mouseOn } = outsideCanvas({
 
 function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
   const {height, width} = sizes
-  const gradient = ctx.createLinearGradient(0, 0, 0, height)
-  hueSpectrum(gradient)
+  const gradient = hueSpectrum(ctx, height)
   ctx.fillStyle = gradient
   ctx.fillRect(0, 0, width, height)
 }
 
-function hueSpectrum(gradient: CanvasGradient) {
-  gradient.addColorStop(0, 'red')
-  gradient.addColorStop(0.17, 'orange')
-  gradient.addColorStop(0.34, 'yellow')
-  gradient.addColorStop(0.51, 'green')
-  gradient.addColorStop(0.68, 'blue')
-  gradient.addColorStop(0.85, 'indigo')
-  gradient.addColorStop(1, 'violet')
+function hueSpectrum(ctx: CanvasRenderingContext2D, height: number) {
+  const gradient = ctx.createLinearGradient(0, 0, 0, height)
+  for (var hue = 0; hue <= 360; hue++) {
+    var hslColor = "hsl(" + hue + ", 100%, 50%)";
+    gradient.addColorStop(hue / 360, hslColor);
+  }
+  return gradient
 }
 
 function hueSlider(canvas?: HTMLCanvasElement | null) {
@@ -105,9 +104,25 @@ function setCenterHandle(y = 0) {
   }
 }
 
+function percentageOfCanvas(percent: number, height?: number) {
+  if(!height) return 0
+  return height * (percent / 100)
+}
+
 onMounted(() => {
   hueSlider(hueCanvas.value)
   setCenterHandle()
+
+  var color = tinycolor(props.color.value);
+  const hsl = color.toHsl();
+
+  updateCanvas({
+    color: props.color.value,
+    position: {
+      x: 0,
+      y: percentageOfCanvas(hsl.h, height.value)
+    }
+  })
 })
 </script>
 
