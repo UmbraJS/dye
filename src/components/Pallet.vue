@@ -36,9 +36,10 @@ function handleClick() {
   >
     <div class="content">
       <p>{{ color.value }}</p>
-      <h3>{{ color.name }}</h3>
+      <p class="h3 name">{{ color.name }}</p>
     </div>
 
+    <div class="shade" style="background: var(--background);"></div>
     <div class="shade" style="background: var(--background-10);"></div>
     <div class="shade" style="background: var(--background-20);"></div>
 
@@ -56,9 +57,9 @@ function handleClick() {
   justify-content: center;
   align-items: center;
 
-  background: v-bind("color.value");
+  background: var(--background);
   color: var(--foreground);
-  height: 75px;
+  min-height: 75px;
   user-select: none;
   cursor: pointer;
   * {
@@ -68,7 +69,20 @@ function handleClick() {
 }
 
 .content {
+  position: absolute;
+  overflow: hidden;
+  max-width: 80%;
+
+  display: flex;
+  flex-direction: column;
+  //gap: var(--space-xs);
   padding: var(--space-s);
+  p.name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.2;
+  }
 }
 
 .shade {
@@ -92,7 +106,7 @@ function handleClick() {
   border-radius: var(--radius);
   position: absolute;
   right: var(--space-s);
-  background-color: var(--background-10);
+  background-color: var(--background-20);
   padding: var(--space-s);
 
   clip-path: circle(0%);
