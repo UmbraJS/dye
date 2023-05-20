@@ -1,8 +1,16 @@
+$mobile: 360px;
+$phablet: 540px;
+$tablet: 850px;
+$desktop: 1200px;
+
 :root {
-  --space: 16px;
-  --space-intimate: calc(var(--space) / 4);
-  --space-familiar: var(--space);
-  --space-seperate: calc(var(--space) * 2);
-  --space-divorced: calc(var(--space) * 4);
-  --outerspace: calc(var(--space) * 6);
+  --radius: 5px;
+  --space-xs: calc(var(--space) / 4);
+  --space-s: calc(var(--space) / 2);
+  --space: 25px;
+  --space-m: calc(2 * var(--space));
+  --space-l: calc(4 * var(--space));
+  --space-xl: calc(8 * var(--space));
+  @media only screen and (max-width: $tablet) {--space: 12px;}
+  @media only screen and (max-width: $mobile) {--space: 6px;}
 }

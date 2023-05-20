@@ -16,26 +16,91 @@ watch(() => props.color, (color) => {
     background: color.value,
   }).attach(pallet.value)
 })
+
+const copied = ref(false)
+
+function handleClick() {
+  if(!navigator?.clipboard) return
+  navigator.clipboard.writeText(props.color.value)
+  copied.value = true
+  setTimeout(() => copied.value = false, 400)
+}
 </script>
 
 <template>
-  <div class="pallet" ref="pallet">
-    <p>{{ color.value }}</p>
-    <h3>{{ color.name }}</h3>
+  <div 
+    ref="pallet" 
+    class="pallet"
+    :class="{copied}"
+    @click="handleClick"
+  >
+    <div class="content">
+      <p>{{ color.value }}</p>
+      <h3>{{ color.name }}</h3>
+    </div>
+
+    <div class="shade" style="background: var(--background-10);"></div>
+    <div class="shade" style="background: var(--background-20);"></div>
+
+    <div v-if="true" class="cap">
+      <h3>{{ copied ? "copied" : "copy" }}</h3>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .pallet {
+  position: relative;
+  display: grid;
+  grid-template-columns: 12fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+
   background: v-bind("color.value");
   color: var(--foreground);
   height: 75px;
-  padding: 15px;
   user-select: none;
+  cursor: pointer;
   * {
     margin: 0px;
     line-height: 1;
   }
+}
+
+.content {
+  padding: var(--space-s);
+}
+
+.shade {
+  height: 100%;
+}
+
+.pallet.copied .cap {
+  animation: flash .4s ease-in-out;
+}
+
+@keyframes flash {
+  0% {
+    background-color: var(--foreground-20);
+  }
+  100% {
+    background-color: var(--background-10);
+  }
+}
+
+.cap {
+  border-radius: var(--radius);
+  position: absolute;
+  right: var(--space-s);
+  background-color: var(--background-10);
+  padding: var(--space-s);
+
+  clip-path: circle(0%);
+  transition: .2s;
+}
+
+.pallet:hover .cap {
+  clip-path: circle(100%);
 }
 </style>
 

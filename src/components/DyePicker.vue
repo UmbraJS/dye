@@ -7,6 +7,9 @@ import ColorCanvas from "./Canvas/ColorCanvas.vue";
 import HueCanvas from "./Canvas/HueCanvas.vue";
 
 const emit = defineEmits(['change'])
+const props = defineProps<{
+  default: string;
+}>()
 
 const colorCanvas = ref<HTMLCanvasElement | null>(null)
 
@@ -20,7 +23,7 @@ function setRef(el: HTMLCanvasElement) {
 
 const color = ref({
   name: 'red',
-  value: '#36576a',
+  value: props.default,
 })
 
 function handleChange(hex?: hexType) {

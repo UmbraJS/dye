@@ -4,9 +4,9 @@ import DyePicker from './components/DyePicker.vue'
 
 <template>
   <div class="pickers">
-    <DyePicker />
-    <DyePicker />
-    <DyePicker />
+    <DyePicker default="#36576a"/>
+    <DyePicker default="#214761"/>
+    <DyePicker default="#682d63"/>
   </div>
 </template>
 
