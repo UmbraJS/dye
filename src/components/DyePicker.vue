@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import tinycolor from "tinycolor2"
 import { ref } from 'vue'
 import { colorName } from "../composables/colorName"
 import { hexType } from '../composables/canvas'
@@ -31,14 +32,14 @@ function handleChange(hex?: hexType) {
   if (!hex) return
   const get = colorName(hex.color)
   const { name, value } = get()
-  const output = {
-    name,
-    value,
-    position: hex.position
-  }
 
-  color.value = output
-  emit('change', output)
+  color.value = { name, value }
+
+  emit('change', {
+    name,
+    value: tinycolor(value),
+    position: hex.position
+  })
 }
 </script>
 
