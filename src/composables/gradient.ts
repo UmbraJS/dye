@@ -1,3 +1,4 @@
+import tinycolor from "tinycolor2"
 import { getDimentions } from "./canvas"
 
 type dimentionsType = {
@@ -31,7 +32,7 @@ export function addHueGradient(props: {ctx: CanvasRenderingContext2D, hue: strin
 }
 
 export function addValueGradient(ctx: CanvasRenderingContext2D, sizes: sizesType) {
-  const {height, dimentions} = sizes
+  const { height, dimentions } = sizes
   const gradient3 = ctx.createLinearGradient(0, 0, 0, height)
   gradient3.addColorStop(0, 'transparent')
   gradient3.addColorStop(1, 'black')
@@ -41,7 +42,7 @@ export function addValueGradient(ctx: CanvasRenderingContext2D, sizes: sizesType
 }
 
 export function addLightValue(ctx: CanvasRenderingContext2D, sizes: sizesType) {
-  const {dimentions} = sizes
+  const { dimentions } = sizes
   ctx.fillStyle = "white"
   fillRect(ctx, dimentions)
 }
@@ -54,6 +55,24 @@ export function fillRect(ctx: CanvasRenderingContext2D, dimentions: dimentionsTy
     dimentions.right, 
     dimentions.bottom
   )
+}
+
+function draw(hue: string, ctx: CanvasRenderingContext2D, sizes: sizesType) {
+  const { width, height, dimentions } = sizes
+  var color = tinycolor(hue);
+  const hsl = color.toHsl();
+	for(var row = 0; row < 100; row++){
+		var grad = ctx.createLinearGradient(0, 0, width, 0);
+		grad.addColorStop(0, 'hsl('+hsl.h+', 0%, '+(100-row)+'%)');
+		grad.addColorStop(1, 'hsl('+hsl.h+', 100%, '+(100-row)+'%)');
+		ctx.fillStyle=grad;
+    fillRect(ctx, {
+      left: dimentions.left,
+      top: dimentions.top + row * height / 100,
+      right: dimentions.right,
+      bottom: dimentions.bottom
+    })
+	}	
 }
 
 //composition
@@ -69,7 +88,9 @@ export function fillCanvas(props?: colorWheelType, canvas?: HTMLCanvasElement | 
     width: saturation
   })
 
-  addLightValue(ctx, sizes)
-  addHueGradient({ctx, hue, sizes})
-  addValueGradient(ctx, sizes)
+  // addLightValue(ctx, sizes)
+  // addHueGradient({ctx, hue, sizes})
+  // addValueGradient(ctx, sizes)
+
+  draw(hue, ctx, sizes)
 }
