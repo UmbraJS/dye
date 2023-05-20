@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import tinycolor from "tinycolor2"
+import { onClickOutside  } from '@vueuse/core'
+import { vOnClickOutside } from '@vueuse/components'
+
 import { ref } from 'vue'
 import { colorName } from "../composables/colorName"
 import { hexType } from '../composables/canvas'
@@ -23,8 +26,6 @@ function setRef(el: HTMLCanvasElement) {
   colorCanvas.value = el
 }
 
-const hslRange = ref({ h: 0, s: 0, l: 0 })
-
 const color = ref({
   name: 'red',
   value: props.default,
@@ -43,13 +44,30 @@ function handleChange(hex?: hexType) {
     position: hex.position
   })
 }
+
+const compact = ref(true)
+const compactSize = ref(50)
+const hueWidth = ref(25)
 </script>
 
 <template>
-  <div class="dyepicker-wrapper">
-    <div ref="pallet" class="pallet-wrapper">
+  <div 
+    class="dyepicker-wrapper" 
+    :class="{ compact }"
+    v-on-click-outside="() => compact = true"
+  >
+    <div 
+      ref="pallet" 
+      class="pallet-wrapper"
+    >
       <slot :color="color" >
-        <Pallet :color="color" />
+        <Pallet
+          :color="color"
+          :hueWidth="hueWidth"
+          :compact="compact"
+          :compactSize="compactSize"
+          @edit="() => compact = false"
+        />
       </slot>
     </div>
     <ColorCanvas
@@ -62,6 +80,7 @@ function handleChange(hex?: hexType) {
       @change="handleChange"
       :colorCanvas="getRef"
       :color="color"
+      :width="hueWidth"
     />
   </div>
 </template>
@@ -69,15 +88,25 @@ function handleChange(hex?: hexType) {
 <style lang="scss" scoped>
 .dyepicker-wrapper {
   display: grid;
-  //width: max-content;
   height: 400px;
   width: auto;
+
+  max-height: 400px;
+  max-width: 400px;
 
   border-radius: var(--radius);
   overflow: hidden;
 
+  transition: .4s;
+
   .pallet-wrapper {
     grid-column: span 2;
   }
+}
+
+.dyepicker-wrapper.compact {
+  --compactSize: calc(v-bind(compactSize) * 1px);
+  max-height: var(--compactSize);
+  max-width: var(--compactSize);
 }
 </style>

@@ -22,7 +22,8 @@ interface Hsl {
 
 const emit = defineEmits(['change'])
 const props = defineProps<{
-  colorCanvas: () => Ref<HTMLCanvasElement | null>
+  width: number;
+  colorCanvas: () => Ref<HTMLCanvasElement | null>;
   color: {
     value: string;
     name: string;
@@ -80,7 +81,7 @@ function updateCanvas(hex: hexType) {
   }
 }
 
-const { width, height } = responsiveCanvas({
+const { width: canvasWidth, height: canvasHeight } = responsiveCanvas({
   canvas: hueCanvas,
   updateCanvas: () => {
     fillHueCanvas()
@@ -114,7 +115,7 @@ onMounted(() => {
     color: props.color.value,
     position: {
       x: 0,
-      y: huePercent(hsl.h, height.value)
+      y: huePercent(hsl.h, canvasHeight.value)
     }
   })
 })
@@ -131,8 +132,8 @@ onMounted(() => {
     <canvas
       ref="hueCanvas"
       class="hue-canvas"
-      :width="width"
-      :height="height"
+      :width="canvasWidth"
+      :height="canvasHeight"
       @mousedown="(e) => hueChange(e, true)"
       @mousemove="(e) => hueChange(e)"
       @mouseleave="() => mouseOn = false"
@@ -151,7 +152,7 @@ onMounted(() => {
 }
 
 canvas.hue-canvas {
-  width: 25px;
+  width: calc(v-bind(width) * 1px);
   height: 100%;
   overflow: hidden;
   background-color: var(--background-20, rgb(64, 0, 0));

@@ -2,10 +2,14 @@
 import { myriad } from "@myriadjs/core"
 import { ref, watch } from 'vue'
 
+const emit = defineEmits(['edit'])
 const props = defineProps<{
+  hueWidth: number;
+  compact: boolean;
+  compactSize: number;
   color: {
-    name: string
-    value: string
+    name: string;
+    value: string;
   }
 }>()
 
@@ -19,11 +23,18 @@ watch(() => props.color, (color) => {
 
 const copied = ref(false)
 
-function handleClick() {
+
+function copyToClipboard() {
   if(!navigator?.clipboard) return
   navigator.clipboard.writeText(props.color.value)
   copied.value = true
   setTimeout(() => copied.value = false, 800)
+}
+
+function handleClick() {
+  props.compact 
+    ? emit('edit')
+    : copyToClipboard()
 }
 </script>
 
@@ -31,9 +42,14 @@ function handleClick() {
   <div 
     ref="pallet" 
     class="pallet"
-    :class="{copied}"
+    :class="{ copied }"
     @click="handleClick"
   >
+
+    <div class="edit" v-if="compact">
+      <p>Edit</p>
+    </div>
+
     <div class="content">
       <p>{{ color.value }}</p>
       <p class="h3 name">{{ color.name }}</p>
@@ -43,8 +59,11 @@ function handleClick() {
     <div class="shade" style="background: var(--background-10);"></div>
     <div class="shade" style="background: var(--background-20);"></div>
 
-    <div v-if="true" class="cap">
-      <p>{{ copied ? "copied" : "copy" }}</p>
+    <div class="cap">
+      <p>{{ copied 
+        ? "copied" 
+        : "copy" }}
+      </p>
     </div>
   </div>
 </template>
@@ -53,7 +72,10 @@ function handleClick() {
 .pallet {
   position: relative;
   display: grid;
-  grid-template-columns: 12fr 1fr 1fr;
+  --hueWidth: calc(v-bind(hueWidth) * 1px);
+  grid-template-columns: 1fr 
+    var(--hueWidth)
+    var(--hueWidth);
   justify-content: center;
   align-items: center;
 
@@ -75,9 +97,8 @@ function handleClick() {
 
   display: flex;
   flex-direction: column;
-  //gap: var(--space-xs);
   padding: var(--space-s);
-  p.name {
+  p {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -103,6 +124,20 @@ function handleClick() {
   }
 }
 
+.edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  --size: calc(v-bind(compactSize) * 1px);
+  width: var(--size);
+  height: var(--size);
+
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
 .cap {
   border-radius: var(--radius);
   position: absolute;
@@ -117,6 +152,12 @@ function handleClick() {
 
 .pallet:hover .cap {
   clip-path: circle(100%);
+}
+
+.compact .pallet {
+  .content p, .shade, .cap {
+    opacity: 0;
+  }
 }
 </style>
 
