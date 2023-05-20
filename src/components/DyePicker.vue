@@ -86,7 +86,11 @@ const hueWidth = ref(25)
 
 <style lang="scss" scoped>
 .dyepicker-wrapper {
+  --hueWidth: calc(v-bind(hueWidth) * 1px);
+
   display: grid;
+  grid-template-columns: 1fr var(--hueWidth);
+
   height: 400px;
   width: auto;
 
