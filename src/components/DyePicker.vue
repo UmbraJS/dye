@@ -101,7 +101,6 @@ const hueWidth = ref(25)
   overflow: hidden;
 
   transition: .4s;
-
   .pallet-wrapper {
     grid-column: span 2;
   }
