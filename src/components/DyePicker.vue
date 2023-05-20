@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import tinycolor from "tinycolor2"
-import { onClickOutside  } from '@vueuse/core'
 import { vOnClickOutside } from '@vueuse/components'
 
 import { ref } from 'vue'
