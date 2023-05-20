@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import tinycolor from "tinycolor2"
-import { ref, onMounted, Ref } from 'vue'
+import { ref, onMounted, Ref, watch } from 'vue'
 import { getDimentions } from "../../composables/canvas"
 import { 
   offCanvas, 
@@ -11,20 +11,13 @@ import {
   hexType,
   responsiveCanvas
 } from '../../composables/canvas'
-import { fillCanvas } from '../../composables/gradient'
+import { fillColorCanvas } from '../../composables/gradient'
 import Handle from '../Handle.vue'
 
-type dimentionsType = {
-  left: number, 
-  top: number, 
-  right: number, 
-  bottom: number
-}
-
-type sizesType = {
-  height: number, 
-  width: number,
-  dimentions: dimentionsType,
+interface Hsl {
+  h: number;
+  s: number;
+  l: number;
 }
 
 const emit = defineEmits(['change'])
@@ -44,28 +37,29 @@ const { mouseOn } = outsideCanvas({
   updateCanvas
 })
 
-function addHueSpectrum(ctx: CanvasRenderingContext2D, sizes: sizesType) {
-  const { height, width } = sizes
-  ctx.fillStyle = hueSpectrum(ctx, height)
-  ctx.fillRect(0, 0, width, height)
-}
-
-function hueSpectrum(ctx: CanvasRenderingContext2D, height: number) {
+function hueGradient(ctx: CanvasRenderingContext2D, height: number, hsl: Hsl = {h: 0, s: 1, l: 0.5}) {
   const gradient = ctx.createLinearGradient(0, 0, 0, height)
   for (var hue = 0; hue <= 360; hue++) {
-    var hslColor = "hsl(" + hue + ", 100%, 50%)";
+    var hslColor = `hsl(${hue}, ${hsl.s * 100}%, ${hsl.l * 100}%)`;
     gradient.addColorStop(hue / 360, hslColor);
   }
   return gradient
 }
 
-function hueSlider(canvas?: HTMLCanvasElement | null) {
-  if(!canvas) return
-  const ctx = canvas.getContext('2d')
+function fillHueCanvas(color: string = props.color.value) {
+  if(!hueCanvas.value) return
+  const ctx = hueCanvas.value?.getContext('2d')
   if(ctx === null) return
-  const sizes = getDimentions(canvas)
-  addHueSpectrum(ctx, sizes)
+  const { height, width } = getDimentions(hueCanvas.value)
+
+  const hsl = tinycolor(color).toHsl();
+  ctx.fillStyle = hueGradient(ctx, height, hsl)
+  ctx.fillRect(0, 0, width, height)
 }
+
+watch(() => props.color.value, (color) => {
+  fillHueCanvas(color)
+})
 
 function hueChange(e: MouseEvent, click = false) {
   if(click) mousedown.value = true
@@ -79,7 +73,7 @@ function hueChange(e: MouseEvent, click = false) {
 function updateCanvas(hex: hexType) {
   if(!hex) return
   emit('change', hex)
-  fillCanvas({hue: hex.color}, props.colorCanvas().value)
+  fillColorCanvas({hue: hex.color}, props.colorCanvas().value)
   position.value = {
     x: position.value.x,
     y: hex.position.y
@@ -89,7 +83,7 @@ function updateCanvas(hex: hexType) {
 const { width, height } = responsiveCanvas({
   canvas: hueCanvas,
   updateCanvas: () => {
-    hueSlider(hueCanvas.value)
+    fillHueCanvas()
     setCenterHandle(position.value.y)
   }
 })
@@ -110,7 +104,7 @@ function huePercent(hue: number, height?: number) {
 }
 
 onMounted(() => {
-  hueSlider(hueCanvas.value)
+  fillHueCanvas()
   setCenterHandle()
 
   var color = tinycolor(props.color.value);

@@ -23,6 +23,8 @@ function setRef(el: HTMLCanvasElement) {
   colorCanvas.value = el
 }
 
+const hslRange = ref({ h: 0, s: 0, l: 0 })
+
 const color = ref({
   name: 'red',
   value: props.default,

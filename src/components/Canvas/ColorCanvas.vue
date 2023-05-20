@@ -10,7 +10,7 @@ import {
   outsideCanvas,
   responsiveCanvas,
 } from '../../composables/canvas'
-import { fillCanvas } from '../../composables/gradient'
+import { fillColorCanvas } from '../../composables/gradient'
 import Handle from '../Handle.vue'
 
 const emit = defineEmits(['change'])
@@ -54,7 +54,7 @@ function getHue(color: string = props.color.value) {
 
 const { width, height } = responsiveCanvas({
   canvas: props.getRef(),
-  updateCanvas: () => fillCanvas({
+  updateCanvas: () => fillColorCanvas({
     hue: getHue(),
     saturation: 100,
     lightness: 100

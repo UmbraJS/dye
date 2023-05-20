@@ -49,7 +49,7 @@ function draw(hue: string, ctx: CanvasRenderingContext2D, sizes: sizesType) {
 }
 
 //composition
-export function fillCanvas(props?: colorWheelType, canvas?: HTMLCanvasElement | null) {
+export function fillColorCanvas(props?: colorWheelType, canvas?: HTMLCanvasElement | null) {
   if(!canvas) return
   const {hue = 'red', saturation = 100, lightness = 100} = props || {}
 

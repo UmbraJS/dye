@@ -30,7 +30,7 @@ export function pixelColor(position: {x: number, y: number}, canvas?: HTMLCanvas
   const pixel = ctx.getImageData(position.x, position.y, 1, 1)
   const data = pixel.data
   const rgba = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3]})`
-  return {color: rgbToHex(rgba), position}
+  return { color: rgbToHex(rgba), position }
 }
 
 export function offCanvas(e: MouseEvent, click: boolean) {
