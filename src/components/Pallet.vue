@@ -23,7 +23,7 @@ function handleClick() {
   if(!navigator?.clipboard) return
   navigator.clipboard.writeText(props.color.value)
   copied.value = true
-  setTimeout(() => copied.value = false, 400)
+  setTimeout(() => copied.value = false, 800)
 }
 </script>
 
@@ -44,7 +44,7 @@ function handleClick() {
     <div class="shade" style="background: var(--background-20);"></div>
 
     <div v-if="true" class="cap">
-      <h3>{{ copied ? "copied" : "copy" }}</h3>
+      <p>{{ copied ? "copied" : "copy" }}</p>
     </div>
   </div>
 </template>
@@ -59,7 +59,7 @@ function handleClick() {
 
   background: var(--background);
   color: var(--foreground);
-  min-height: 75px;
+  height: 75px;
   user-select: none;
   cursor: pointer;
   * {
@@ -90,7 +90,8 @@ function handleClick() {
 }
 
 .pallet.copied .cap {
-  animation: flash .4s ease-in-out;
+  background-color: var(--background-20);
+  animation: flash .6s ease-in-out;
 }
 
 @keyframes flash {
@@ -98,7 +99,7 @@ function handleClick() {
     background-color: var(--foreground-20);
   }
   100% {
-    background-color: var(--background-10);
+    background-color: var(--background-20);
   }
 }
 
@@ -108,6 +109,7 @@ function handleClick() {
   right: var(--space-s);
   background-color: var(--background-20);
   padding: var(--space-s);
+  min-width: 60px;
 
   clip-path: circle(0%);
   transition: .2s;

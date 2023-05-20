@@ -11,6 +11,7 @@ const props = defineProps<{
   default: string;
 }>()
 
+const pallet = ref<HTMLElement | null>(null)
 const colorCanvas = ref<HTMLCanvasElement | null>(null)
 
 function getRef() {
@@ -43,9 +44,11 @@ function handleChange(hex?: hexType) {
 
 <template>
   <div class="dyepicker-wrapper">
-    <slot :color="color" >
-      <Pallet :color="color" />
-    </slot>
+    <div ref="pallet" class="pallet-wrapper">
+      <slot :color="color" >
+        <Pallet :color="color" />
+      </slot>
+    </div>
     <ColorCanvas
       @change="handleChange"
       :getRef="getRef"
@@ -63,10 +66,14 @@ function handleChange(hex?: hexType) {
 <style lang="scss" scoped>
 .dyepicker-wrapper {
   display: grid;
-  width: max-content;
+  //width: max-content;
   height: 400px;
+  width: auto;
 
-  .pallet {
+  border-radius: var(--radius);
+  overflow: hidden;
+
+  .pallet-wrapper {
     grid-column: span 2;
   }
 }
