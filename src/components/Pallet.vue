@@ -16,13 +16,13 @@ const props = defineProps<{
 const pallet =  ref<HTMLElement>()
 
 watch(() => props.color, (color) => {
+  if(!pallet.value) return
   myriad({
     background: color.value,
   }).attach(pallet.value)
 })
 
 const copied = ref(false)
-
 
 function copyToClipboard() {
   if(!navigator?.clipboard) return

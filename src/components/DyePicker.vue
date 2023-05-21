@@ -34,7 +34,6 @@ function handleChange(hex?: hexType) {
   if (!hex) return
   const get = colorName(hex.color)
   const { name, value } = get()
-
   color.value = { name, value }
 
   emit('change', {

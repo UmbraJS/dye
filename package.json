@@ -1,7 +1,7 @@
 {
   "name": "@myriadjs/dye",
   "private": false,
-  "version": "0.0.695",
+  "version": "0.0.698",
   "description": "Color picker in a Vue component",
   "author": "Samuel M. Bednarz<https://github.com/CarelessCourage>",
   "license": "MIT",
@@ -36,7 +36,7 @@
     "type-check": "vue-tsc --emitDeclarationOnly"
   },
   "dependencies": {
-    "@myriadjs/core": "^0.0.84",
+    "@myriadjs/core": "^0.0.86",
     "@vueuse/components": "^10.1.2",
     "@vueuse/core": "^10.1.2",
     "nearest-color": "^0.4.4",
