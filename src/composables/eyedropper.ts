@@ -9,6 +9,7 @@ function notSupported() {
     console.log('EyeDropper API not supported')
     return true
   }
+  return false
 }
 
 // @ts-ignore

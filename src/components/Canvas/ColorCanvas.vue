@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted, watch } from 'vue'
+import { ref, Ref, watch } from 'vue'
 import tinycolor from "tinycolor2"
 import { 
   hexType,
