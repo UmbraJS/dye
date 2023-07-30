@@ -12,8 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    // "noEmit": true,
-    "jsx": "preserve",
+    "emitDeclarationOnly": true,
     
     "outDir": "dist",
     "declaration": true,
